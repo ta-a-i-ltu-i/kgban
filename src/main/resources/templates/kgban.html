@@ -2,9 +2,43 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<link rel="stylesheet" href="kgban.css">
+<title>KG版</title>
 </head>
 <body>
-<h1>ハロワ</h1>
+	<div class="center">
+		<label>掲示板</label>
+	</div>
+	<form action="./" method="post">
+		<div class="a inline-block">
+			<label class="label">name</label>
+		</div>
+		<div class="inline-block">
+			<input type="text" class="nam" name="name" id="name"
+				placeholder="全半角12文字以内" maxlength="12" required>
+		</div>
+		<div></div>
+		<div class="a inline-block">
+			<label class="label">message</label>
+		</div>
+		<div class="inline-block">
+			<input type="text" class="mes" name="name" id="name"
+				placeholder="全半角25文字以内" maxlength="25" required>
+		</div>
+		<div>
+			<input type="submit" class="bot" value="投稿">
+		</div>
+	</form>
+	<div class="b">
+		<ul class="output">
+			<li>1</li>
+			<li>名前</li>
+			<li>時間</li>
+		</ul>
+	</div>
+	<div class="message">メッセージ</div>
+
+
 </body>
 </html>
+

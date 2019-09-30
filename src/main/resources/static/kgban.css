@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+.center {
+	border: 1px solid #00001c;
+	text-align: center;
+	background-color: #1eff16;
+	margin-bottom: 30px;
+	padding: 3px;
+	font-size: 50px;
+}
+
+.a {
+	width: 90px;
+	margin-left: 5%;
+	font-size: 16px;
+}
+
+.inline-block {
+	display: inline-block;
+	margin-bottom: 20px;
+}
+
+.nam {
+	width: 170px;
+}
+
+.mes {
+	width: 350px;
+}
+
+
+.output li {
+	float: left;
+	list-style: none;
+	margin: 10px;
+}
+
+.message {
+	clear: both;
+	padding-left: 5%;
+	margin-bottom: 20px;
+}
+
+.label {
+	width: 500px;
+}
+
+input.bot {
+	margin-left: 11%;
+	margin-bottom: 20px;
+}
+.b {
+	padding-left: 1%;
+	border-top: 1px solid silver;
+}
