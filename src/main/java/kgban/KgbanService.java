@@ -14,15 +14,13 @@ public class KgbanService {
 		//dtoに値をセットしてdaoメソッドを呼ぶ
 		//ここではmaxIDと現在時刻もdtoに入れないといけないためその二つも取得する
 		int maxId = dao.getId();
-		System.out.println(maxId);
 
 		KgbanDto dto = new KgbanDto();
 		dto.setId(maxId);
 		dto.setName(kf.getName());
 		dto.setMessage(kf.getMessage());
 		dto.setTime(new Timestamp(System.currentTimeMillis()));
-		System.out.println(dto.getTime());
-		
+  		
 		dao.daoInsert(dto);
 
 	}

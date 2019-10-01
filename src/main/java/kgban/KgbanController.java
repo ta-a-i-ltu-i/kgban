@@ -13,6 +13,7 @@ public class KgbanController {
 	  private KgbanService service;
 	
 	
+	 //一覧表示するためのメソッド
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Model model) {
         return "kgban";  //表示するHTMLファイルの名前（拡張子不要）を指定
@@ -24,13 +25,12 @@ public class KgbanController {
   		String name = kf.getName();
   		String message = kf.getMessage();
 
-  		
   		service.setmessage(kf);
   		
   		return new ModelAndView("redirect:/");
   		
   	}
-  	//一覧表示するためのメソッド
+  	
 }
 
 
