@@ -1,6 +1,7 @@
 package kgban;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,13 @@ public class KgbanService {
 		dto.setTime(new Timestamp(System.currentTimeMillis()));
   		
 		dao.daoInsert(dto);
-
+		
+		
+	}
+	
+	public ArrayList<KgbanDto> getMessage(){
+		ArrayList<KgbanDto> list = dao.select();		
+		return list;
 	}
 
 }

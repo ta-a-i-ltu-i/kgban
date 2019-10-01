@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="kgban.css">
@@ -14,30 +14,34 @@
 			<label class="label">name</label>
 		</div>
 		<div class="inline-block">
-			<input type="text" class="nam" name="name"
-				placeholder="全半角12文字以内" maxlength="12" required>
+			<input type="text" class="nam" name="name" placeholder="全半角12文字以内"
+				maxlength="12" required>
 		</div>
 		<div></div>
 		<div class="a inline-block">
 			<label class="label">message</label>
 		</div>
 		<div class="inline-block">
-			<input type="text" class="mes" name="message" 
-				placeholder="全半角25文字以内" maxlength="25" required>
+			<input type="text" class="mes" name="message" placeholder="全半角25文字以内"
+				maxlength="25" required>
 		</div>
 		<div>
 			<input type="submit" class="bot" value="投稿">
 		</div>
 	</form>
-	<div class="b">
-		<ul class="output">
-			<li>1</li>
-			<li>名前</li>
-			<li>時間</li>
-		</ul>
-	</div>
-	<div class="message">メッセージ</div>
+	<div th:each="obj:${list}">
+	<hr>
+		<p class="output">
+			<output th:text="${obj.id}"></output>
+			<output th:text="${obj.name}"></output>
+			<output th:text="${obj.time}"></output>
+		</p>
 
+	<p th:text="${obj.message}" class="message">
+      <output th:text="${obj.message}"></output>
+    </p>
+	
+	</div>
 
 </body>
 </html>

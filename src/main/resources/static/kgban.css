@@ -29,10 +29,11 @@
 }
 
 
-.output li {
+p.output {
 	float: left;
 	list-style: none;
 	margin: 10px;
+	padding-left: 5%;
 }
 
 .message {
@@ -49,7 +50,4 @@ input.bot {
 	margin-left: 11%;
 	margin-bottom: 20px;
 }
-.b {
-	padding-left: 1%;
-	border-top: 1px solid silver;
-}
+

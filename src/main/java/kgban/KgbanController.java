@@ -1,7 +1,8 @@
 package kgban;
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,10 +15,19 @@ public class KgbanController {
 	
 	
 	 //一覧表示するためのメソッド
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(Model model) {
-        return "kgban";  //表示するHTMLファイルの名前（拡張子不要）を指定
-    }       
+		/**
+		 * 過去の投稿を表示
+		 * @param mav
+		 * @return
+		 */
+	  @RequestMapping(value = "/", method = RequestMethod.GET)
+	  public ModelAndView getWebBoardPage(ModelAndView mav) {
+	    mav.setViewName("kgban");
+	    
+	    ArrayList<KgbanDto> list = service.getMessage();
+	    mav.addObject("list", list);
+	    return mav;
+	  }
     
   //登録するためのメソッド
   	@RequestMapping(value="/",  method = RequestMethod.POST)

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
@@ -129,6 +130,76 @@ public class KgbanDao {
 	}
 	
 	//DBからデータを受け取る
-	
+	/**
+	 * データベースからメッセージを取得する
+	 *
+	 * @return メッセージを格納したリスト
+	 */
+	public ArrayList<KgbanDto> select() {
+
+		// コネクションクラスの宣言
+		Connection con = null;
+		// ステートメントクラスの宣言
+		PreparedStatement ps = null;
+		// リザルトセットクラスの宣言
+		ResultSet rs = null;
+
+		ArrayList<KgbanDto> list = new ArrayList<>();
+
+		// データベースにアクセス
+		try {
+			// データベースとの接続を行う
+			con = DataSourceUtils.getConnection(dataSource);
+
+			StringBuilder builder = new StringBuilder();
+			builder.append("SELECT ");
+			builder.append("   id ");
+			builder.append("  ,name ");
+			builder.append("  ,message ");
+			builder.append("  ,created_at ");
+			builder.append("FROM ");
+			builder.append("  message_board ");
+			builder.append("ORDER BY ");
+			builder.append("  id DESC");
+
+			// ステートメントクラスにSQL文を格納
+			ps = con.prepareStatement(builder.toString());
+			// SQLを実行して取得結果をリザルトセットに格納
+			rs = ps.executeQuery();
+
+			// リザルトセットから1レコードずつデータを取り出す
+			while (rs.next()) {
+				// 取得結果を格納するDtoをインスタンス化
+				KgbanDto dto = new KgbanDto();
+				// Dtoに取得結果を格納
+				dto.setId(rs.getInt("id"));
+				dto.setName(rs.getString("name"));
+				dto.setMessage(rs.getString("message"));
+				dto.setTime(rs.getTimestamp("created_at"));
+				// Dtoに格納された1レコード分のデータをリストに詰める
+				list.add(dto);
+			}
+			return list;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (ps != null) {
+					ps.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	
 }
