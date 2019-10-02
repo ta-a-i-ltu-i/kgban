@@ -1,4 +1,4 @@
-package kgban;
+package kgban.form;
 
 public class KgbanForm {
 	private String name;

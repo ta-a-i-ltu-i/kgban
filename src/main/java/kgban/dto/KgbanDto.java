@@ -1,4 +1,4 @@
-package kgban;
+package kgban.dto;
 
 import java.sql.Timestamp;
 

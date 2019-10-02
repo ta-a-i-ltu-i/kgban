@@ -1,4 +1,4 @@
-package kgban;
+package kgban.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +11,9 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import kgban.dto.KgbanDto;
+
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 
