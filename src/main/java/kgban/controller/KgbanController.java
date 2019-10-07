@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,7 +32,7 @@ public class KgbanController {
 	 * @return 過去の投稿を格納したリスト
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView form(@ModelAttribute("form")KgbanForm kgbanform,ModelAndView mav) throws SQLException {
+	public ModelAndView form(@ModelAttribute("form") KgbanForm kgbanform, ModelAndView mav) throws SQLException {
 		mav.setViewName("kgban");
 
 		ArrayList<KgbanGetDto> list = service.getMessages();
@@ -48,19 +47,14 @@ public class KgbanController {
 	 * @return 掲示板画面再描画
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView message(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult result)
+	public ModelAndView message(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult result, ModelAndView mav)
 			throws SQLException {
 
-
-		String name = kgbanForm.getName();
-		String message = kgbanForm.getMessage();
-
-		name = name.trim();
-		message = message.trim();
-
-
 		if (result.hasErrors()) {
-			return new ModelAndView("kgban");
+			mav.setViewName("kgban");
+			ArrayList<KgbanGetDto> list = service.getMessages();
+			mav.addObject("list", list);
+			return mav;
 		}
 		service.setMessage(kgbanForm);
 		return new ModelAndView("redirect:/");
@@ -68,4 +62,3 @@ public class KgbanController {
 	}
 
 }
-
