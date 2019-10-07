@@ -4,39 +4,109 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kgban.dto.KgbanDto;
+import kgban.dto.KgbanGetDto;
+import kgban.dto.KgbanPostDto;
 
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
-
+/**
+ * 掲示板dao
+ */
 @Component
 public class KgbanDao {
+	/**
+	 * データベースからメッセージを取得.
+	 *
+	 * @return メッセージを格納したリスト
+	 */
+
 	@Autowired
 	DataSource dataSource;
-	
 
-	public int getId() {
+	public ArrayList<KgbanGetDto> selectMessages() throws SQLException {
+
+		// コネクションクラスの宣言
+		Connection con = null;
+		// ステートメントクラスの宣言
+		PreparedStatement ps = null;
+		// リザルトセットクラスの宣言
+		ResultSet rs = null;
+
+		ArrayList<KgbanGetDto> list = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+
+		// データベースにアクセス
+
+		// データベースとの接続を行う
+		con = DataSourceUtils.getConnection(dataSource);
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT ");
+		builder.append("   id ");
+		builder.append("  ,name ");
+		builder.append("  ,message ");
+		builder.append("  ,created_at ");
+		builder.append("FROM ");
+		builder.append("  message_board ");
+		builder.append("ORDER BY ");
+		builder.append("  id DESC");
+
+		// ステートメントクラスにSQL文を格納
+		ps = con.prepareStatement(builder.toString());
+		// SQLを実行して取得結果をリザルトセットに格納
+		rs = ps.executeQuery();
+		
+
+		// リザルトセットから1レコードずつデータを取り出す
+		while (rs.next()) {
+			
+			// 取得結果を格納するDtoをインスタンス化
+			KgbanGetDto dto = new KgbanGetDto();
+			// Dtoに取得結果を格納
+			dto.setId(rs.getInt("id"));
+			dto.setName(rs.getString("name"));
+			dto.setMessage(rs.getString("message"));
+			dto.setTime(sdf.format(rs.getTimestamp("created_at")));
+			
+			// Dtoに格納された1レコード分のデータをリストに詰める
+			list.add(dto);
+		}
+		
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return list;
+	}
+
+	/**
+	 * 最大のIDを取得.
+	 * 
+	 * @return 最大ID
+	 */
+	public int getId()throws SQLException  {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		
-		int nextId = 1;
+
+		int getMaxId = 0;
 		// データベースとの接続を行う
-		try {
 			con = DataSourceUtils.getConnection(dataSource);
 
 			// 最大のIDを取得
 			StringBuilder builder = new StringBuilder();
 			builder.append("SELECT                    ");
-			builder.append("  MAX(id) AS max_id ");
+			builder.append("  NVL(MAX(id),0) AS max_id ");
 			builder.append("FROM                      ");
 			builder.append("  message_board              ");
 
@@ -46,20 +116,12 @@ public class KgbanDao {
 			rs = ps.executeQuery();
 			// 最大のIDに１を足す
 			if (rs.next()) {
-				nextId = rs.getInt("max_id");
-				nextId += 1;
+				getMaxId = rs.getInt("max_id");
 
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			try {
 				con.rollback();
-			} catch (SQLException re) {
-				re.printStackTrace();
-			}
-		} finally {
-			try {
+			
 				if (rs != null) {
 					rs.close();
 				}
@@ -67,29 +129,24 @@ public class KgbanDao {
 					ps.close();
 				}
 
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+				// 呼び出し元に取得結果を返却
+				return getMaxId;
+			
 		}
-		// 呼び出し元に取得結果を返却
-		return nextId;
-		
-	}
+
+	
 
 	/**
-	 * データベースにメッセージを保存する
+	 * データベースにメッセージを登録.
 	 *
-	 * @param dto 投稿メッセージを格納したMessageDtoクラス
-	 * @return 処理結果（件数）
+	 * @param dto 投稿メッセージを格納したDto
 	 */
-	public void daoInsert(KgbanDto dto) {
+	public void insertMessage(KgbanPostDto dto)throws SQLException  {
 		// コネクションクラスの宣言
 		Connection con = null;
 		// ステートメントクラスの宣言
 		PreparedStatement ps = null;
 		//
-
-		try {
 			// データベースとの接続を行う
 			con = DataSourceUtils.getConnection(dataSource);
 
@@ -115,94 +172,14 @@ public class KgbanDao {
 			ps.setString(3, dto.getMessage());
 			ps.setTimestamp(4, dto.getTime());
 
-
 			// SQLを実行
 			ps.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
+		
 				if (ps != null) {
 					ps.close();
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	//DBからデータを受け取る
-	/**
-	 * データベースからメッセージを取得する
-	 *
-	 * @return メッセージを格納したリスト
-	 */
-	public ArrayList<KgbanDto> select() {
-
-		// コネクションクラスの宣言
-		Connection con = null;
-		// ステートメントクラスの宣言
-		PreparedStatement ps = null;
-		// リザルトセットクラスの宣言
-		ResultSet rs = null;
-
-		ArrayList<KgbanDto> list = new ArrayList<>();
-
-		// データベースにアクセス
-		try {
-			// データベースとの接続を行う
-			con = DataSourceUtils.getConnection(dataSource);
-
-			StringBuilder builder = new StringBuilder();
-			builder.append("SELECT ");
-			builder.append("   id ");
-			builder.append("  ,name ");
-			builder.append("  ,message ");
-			builder.append("  ,created_at ");
-			builder.append("FROM ");
-			builder.append("  message_board ");
-			builder.append("ORDER BY ");
-			builder.append("  id DESC");
-
-			// ステートメントクラスにSQL文を格納
-			ps = con.prepareStatement(builder.toString());
-			// SQLを実行して取得結果をリザルトセットに格納
-			rs = ps.executeQuery();
-
-			// リザルトセットから1レコードずつデータを取り出す
-			while (rs.next()) {
-				// 取得結果を格納するDtoをインスタンス化
-				KgbanDto dto = new KgbanDto();
-				// Dtoに取得結果を格納
-				dto.setId(rs.getInt("id"));
-				dto.setName(rs.getString("name"));
-				dto.setMessage(rs.getString("message"));
-				dto.setTime(rs.getTimestamp("created_at"));
-				// Dtoに格納された1レコード分のデータをリストに詰める
-				list.add(dto);
-			}
-			return list;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (ps != null) {
-					ps.close();
-				}
-				if (con != null) {
-					con.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+			
 	}
 
-	
 }

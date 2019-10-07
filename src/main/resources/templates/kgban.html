@@ -9,13 +9,14 @@
 	<div class="center">
 		<label>掲示板</label>
 	</div>
-	<form action="./" method="post">
+	<form action="./" method="post"  th:object="${form}">
 		<div class="a inline-block">
 			<label class="label">name</label>
 		</div>
 		<div class="inline-block">
 			<input type="text" class="nam" name="name" placeholder="全半角12文字以内"
-				maxlength="12" required>
+				maxlength="12" th:field="*{name}" th:erroreslass="fieldError"  />
+		<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red"></label>
 		</div>
 		<div></div>
 		<div class="a inline-block">
@@ -23,26 +24,26 @@
 		</div>
 		<div class="inline-block">
 			<input type="text" class="mes" name="message" placeholder="全半角25文字以内"
-				maxlength="25" required>
+				maxlength="25" >
+		<label th:if="${#fields.hasErrors('message')}" th:errors="*{message}" style="color: red"></label>
 		</div>
 		<div>
 			<input type="submit" class="bot" value="投稿">
 		</div>
 	</form>
 	<div th:each="obj:${list}">
-	<hr>
+		<hr>
 		<p class="output">
 			<output th:text="${obj.id}"></output>
 			<output th:text="${obj.name}"></output>
 			<output th:text="${obj.time}"></output>
 		</p>
 
-	<p th:text="${obj.message}" class="message">
-      <output th:text="${obj.message}"></output>
-    </p>
-	
+		<p th:text="${obj.message}" class="message">
+			<output th:text="${obj.message}"></output>
+		</p>
+
 	</div>
 
 </body>
 </html>
-

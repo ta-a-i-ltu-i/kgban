@@ -1,65 +1,71 @@
+
 package kgban.controller;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import kgban.dto.KgbanDto;
+import kgban.dto.KgbanGetDto;
 import kgban.form.KgbanForm;
 import kgban.service.KgbanService;
 
-import org.apache.commons.lang3.StringUtils;
-
+/**
+ * 掲示板コントローラ.
+ */
 @Controller
 public class KgbanController {
-	 @Autowired
-	  private KgbanService service;
-	
-	
-	 //一覧表示するためのメソッド
-		/**
-		 * 過去の投稿を表示
-		 * @param mav
-		 * @return
-		 */
-	  @RequestMapping(value = "/", method = RequestMethod.GET)
-	  public ModelAndView getWebBoardPage(ModelAndView mav) {
-	    mav.setViewName("kgban");
-	    
-	    ArrayList<KgbanDto> list = service.getMessage();
-	    mav.addObject("list", list);
-	    return mav;
-	  }
-    
-  //登録するためのメソッド
-  	@RequestMapping(value="/",  method = RequestMethod.POST)
-  	public ModelAndView message(@ModelAttribute("form")  KgbanForm kf) {
-  		
-  		final int NAME_MAX = 12;
-  		final int MESSAGE_MAX = 25;
-  		
-  		String name = kf.getName();
-  		String message = kf.getMessage();
-  		
-  		name = name.trim();
-  		message = message.trim();
-  		
-  		
-  		if(!StringUtils.isEmpty(name) && name.length() <= NAME_MAX){
-  			if(!StringUtils.isEmpty(message) && message.length() <= MESSAGE_MAX){
-  				service.setmessage(kf); 				
-  			}
-  		}
-  		
-  		return new ModelAndView("redirect:/");
-  		
-  	}
-  	
-}
+	@Autowired
+	private KgbanService service;
 
+	/**
+	 * 過去の投稿を表示.
+	 * 
+	 * @param mav
+	 * @return 過去の投稿を格納したリスト
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public ModelAndView form(@ModelAttribute("form")KgbanForm kgbanform,ModelAndView mav) throws SQLException {
+		mav.setViewName("kgban");
+
+		ArrayList<KgbanGetDto> list = service.getMessages();
+		mav.addObject("list", list);
+		return mav;
+	}
+
+	/**
+	 * 投稿をBDに登録.
+	 * 
+	 * @param kf 投稿されたnameとmessage
+	 * @return 掲示板画面再描画
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	public ModelAndView message(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult result)
+			throws SQLException {
+
+
+		String name = kgbanForm.getName();
+		String message = kgbanForm.getMessage();
+
+		name = name.trim();
+		message = message.trim();
+
+
+		if (result.hasErrors()) {
+			return new ModelAndView("kgban");
+		}
+		service.setMessage(kgbanForm);
+		return new ModelAndView("redirect:/");
+
+	}
+
+}
 
