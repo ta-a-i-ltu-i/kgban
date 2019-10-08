@@ -22,6 +22,9 @@ import kgban.service.KgbanService;
  */
 @Controller
 public class KgbanController {
+	// ----------------------------------------------------------------------
+	// インスタンス変数
+	// ----------------------------------------------------------------------
 	@Autowired
 	private KgbanService service;
 
@@ -32,11 +35,13 @@ public class KgbanController {
 	 * @return 過去の投稿を格納したリスト
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView form(@ModelAttribute("form") KgbanForm kgbanform, ModelAndView mav) throws SQLException {
+	public ModelAndView requestForm(@ModelAttribute("form") KgbanForm kgbanform, ModelAndView mav) throws SQLException {
+		
+		//表示画面と過去の投稿をセット
 		mav.setViewName("kgban");
-
-		ArrayList<KgbanGetDto> list = service.getMessages();
+		ArrayList<KgbanGetDto> list = service.registerContents();
 		mav.addObject("list", list);
+
 		return mav;
 	}
 
@@ -44,19 +49,22 @@ public class KgbanController {
 	 * 投稿をBDに登録.
 	 * 
 	 * @param kf 投稿されたnameとmessage
-	 * @return 掲示板画面再描画
+	 * @return 正常:掲示板画面再描画 異常:掲示板画面にエラーメッセージを表示
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView message(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult result, ModelAndView mav)
-			throws SQLException {
-
+	public ModelAndView requestRegister(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult result,
+			ModelAndView mav) throws SQLException {
+		
+		//エラーがなければ掲示板画面再描画を、エラーがあれば掲示板画面とエラーメッセージをreturn
 		if (result.hasErrors()) {
 			mav.setViewName("kgban");
-			ArrayList<KgbanGetDto> list = service.getMessages();
+			ArrayList<KgbanGetDto> list = service.registerContents();
 			mav.addObject("list", list);
+
 			return mav;
 		}
-		service.setMessage(kgbanForm);
+		service.loadContent(kgbanForm);
+
 		return new ModelAndView("redirect:/");
 
 	}

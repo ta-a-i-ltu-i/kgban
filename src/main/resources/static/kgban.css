@@ -1,6 +1,9 @@
 @charset "UTF-8";
+/*　掲示板*/
 
-.center {
+
+/*　タイトル*/
+.title {
 	border: 1px solid #00001c;
 	text-align: center;
 	background-color: #1eff16;
@@ -9,7 +12,8 @@
 	font-size: 50px;
 }
 
-.a {
+/*　投稿エリア*/
+.postArea {
 	width: 90px;
 	margin-left: 5%;
 	font-size: 16px;
@@ -21,14 +25,24 @@
 	padding-left: 0%;
 }
 
-.nam {
+.label {
+	width: 500px;
+}
+
+.name-textbox {
 	width: 170px;
 }
 
-.mes {
+.message-textbox {
 	width: 350px;
 }
 
+.botton {
+	margin-left: 10%;
+	margin-bottom: 20px;
+}
+
+/*　投稿一覧エリア*/
 p.output {
 	float: left;
 	list-style: none;
@@ -39,14 +53,5 @@ p.output {
 .message {
 	clear: both;
 	padding-left: 5%;
-	margin-bottom: 20px;
-}
-
-.label {
-	width: 500px;
-}
-
-input.bot {
-	margin-left: 10%;
 	margin-bottom: 20px;
 }

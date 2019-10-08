@@ -1,6 +1,7 @@
 package kgban.dto;
+
 /**
- * 掲示板dto
+ * データ取得用掲示板dto.
  */
 public class KgbanGetDto {
 

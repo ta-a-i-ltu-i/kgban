@@ -5,49 +5,48 @@ import java.sql.Timestamp;
 public class KgbanPostDto {
 
 	/**
-	 * 掲示板dto
+	 * データ登録用掲示板Dto.
 	 */
 
-		/** ID */
-		private int Id;
-		/** 投稿名 */
-		private String name;
-		/** 投稿時間 */
-		private Timestamp time;
-		/** 投稿メッセージ */
-		private String message;
+	/** ID */
+	private int Id;
+	/** 投稿名 */
+	private String name;
+	/** 投稿時間 */
+	private Timestamp time;
+	/** 投稿メッセージ */
+	private String message;
 
-		public int getId() {
-			return Id;
-		}
+	public int getId() {
+		return Id;
+	}
 
-		public void setId(int id) {
-			Id = id;
-		}
+	public void setId(int id) {
+		Id = id;
+	}
 
-		public String getName() {
-			return name;
-		}
+	public String getName() {
+		return name;
+	}
 
-		public void setName(String name) {
-			this.name = name;
-		}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-		public Timestamp getTime() {
-			return time;
-		}
+	public Timestamp getTime() {
+		return time;
+	}
 
-		public void setTime(Timestamp time) {
-			this.time = time;
-		}
+	public void setTime(Timestamp time) {
+		this.time = time;
+	}
 
-		public String getMessage() {
-			return message;
-		}
+	public String getMessage() {
+		return message;
+	}
 
-		public void setMessage(String message) {
-			this.message = message;
-		}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-	
 }

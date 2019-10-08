@@ -18,39 +18,45 @@ import kgban.form.KgbanForm;
  */
 @Service
 public class KgbanService {
+	
 	@Autowired
-	KgbanDao dao;
+	private KgbanDao dao;
 
 	/**
-	 * 過去の投稿を取得するメソッド.
+	 * 過去の投稿を取得.
 	 * 
 	 * @return 過去の投稿を格納したリスト
 	 */
-	  @Transactional
-	public ArrayList<KgbanGetDto> getMessages() throws SQLException{
-		ArrayList<KgbanGetDto> list = dao.selectMessages();
+	
+	//トランザクション制御
+	@Transactional
+	public ArrayList<KgbanGetDto> registerContents() throws SQLException {
+		
+		//投稿内容を格納したリストを受け取る
+		ArrayList<KgbanGetDto> list = dao.selectContents();
+		
 		return list;
 	}
 
 	/**
-	 * 投稿を登録するメソッド.
+	 * 投稿を登録.
 	 * 
-	 * @param kf 投稿されたnameとmessage
+	 * @param kgbanForm 投稿されたnameとmessage
 	 */
-	  @Transactional
-	public void setMessage(KgbanForm kgbanForm) throws SQLException {
-		int maxId = dao.getId();
+	@Transactional
+	public void loadContent(KgbanForm kgbanForm) throws SQLException {
 		
+		//最大IDを取得する
+		int maxId = dao.loadMaxId();
 
+		//KgbanPostDtoに登録する内容を格納する
 		KgbanPostDto dto = new KgbanPostDto();
 		dto.setId(maxId + 1);
 		dto.setName(kgbanForm.getName());
 		dto.setMessage(kgbanForm.getMessage());
 		dto.setTime(new Timestamp(System.currentTimeMillis()));
-		
-		System.out.println(dto.getTime());
 
-		dao.insertMessage(dto);
+		dao.insertContent(dto);
 
 	}
 
