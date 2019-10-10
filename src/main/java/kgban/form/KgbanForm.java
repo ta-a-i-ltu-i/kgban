@@ -13,8 +13,8 @@ public class KgbanForm {
 	/** 投稿メッセージ */
 	private String message;
 
-	@NotEmpty(message = "※入力必須")
-	@Size(max = 12, message = "※全半角12文字以内")
+	@NotEmpty(message = "{errors.validation.Required.message}")
+	@Size(max = 12, message = "{errors.validation.MaxSize.message}")
 	public String getName() {
 		return name;
 	}
@@ -23,8 +23,8 @@ public class KgbanForm {
 		this.name = name;
 	}
 
-	@NotEmpty(message = "※入力必須")
-	@Size(max = 25, message = "※全半角25文字以内")
+	@NotEmpty(message = "{errors.validation.Required.message}")
+	@Size(max = 25, message = "{errors.validation.MaxSize.message}")
 	public String getMessage() {
 		return message;
 	}

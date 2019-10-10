@@ -1,28 +1,26 @@
 package kgban.dto;
 
-import java.sql.Timestamp;
-
-public class KgbanPostDto {
+public class KgbanDto {
 
 	/**
 	 * データ登録用掲示板Dto.
 	 */
 
 	/** ID */
-	private int Id;
+	private int id;
 	/** 投稿名 */
 	private String name;
 	/** 投稿時間 */
-	private Timestamp time;
+	private String time;
 	/** 投稿メッセージ */
 	private String message;
 
 	public int getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(int id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getName() {
@@ -33,11 +31,11 @@ public class KgbanPostDto {
 		this.name = name;
 	}
 
-	public Timestamp getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Timestamp time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 

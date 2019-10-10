@@ -12,8 +12,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import kgban.dto.KgbanGetDto;
-import kgban.dto.KgbanPostDto;
+import kgban.dto.KgbanDto;
 
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
@@ -31,7 +30,7 @@ public class KgbanDao {
 	@Autowired
 	private DataSource dataSource;
 
-	public ArrayList<KgbanGetDto> selectContents() throws SQLException {
+	public ArrayList<KgbanDto> selectUserMessages() throws SQLException {
 
 		// コネクションクラスの宣言
 		Connection con = null;
@@ -40,7 +39,7 @@ public class KgbanDao {
 		// リザルトセットクラスの宣言
 		ResultSet rs = null;
 
-		ArrayList<KgbanGetDto> list = new ArrayList<>();
+		ArrayList<KgbanDto> list = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
 		// データベースとの接続を行う
@@ -66,7 +65,7 @@ public class KgbanDao {
 		while (rs.next()) {
 
 			// 取得結果を格納するDtoをインスタンス化
-			KgbanGetDto kgbanGetDto = new KgbanGetDto();
+			KgbanDto kgbanGetDto = new KgbanDto();
 			// Dtoに取得結果を格納
 			kgbanGetDto.setId(rs.getInt("id"));
 			kgbanGetDto.setName(rs.getString("name"));
@@ -91,7 +90,7 @@ public class KgbanDao {
 	 * 
 	 * @return 最大ID
 	 */
-	public int loadMaxId() throws SQLException {
+	public int getMaxId() throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -102,22 +101,19 @@ public class KgbanDao {
 
 		// 最大のIDを取得
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT                    ");
+		builder.append("SELECT                     ");
 		builder.append("  NVL(MAX(id),0) AS max_id ");
-		builder.append("FROM                      ");
-		builder.append("  message_board              ");
+		builder.append("FROM                       ");
+		builder.append("  message_board            ");
 
 		// ステートメントクラスにSQL文を格納
 		ps = con.prepareStatement(builder.toString());
 		// SQLを実行して取得結果をリザルトセットに格納
 		rs = ps.executeQuery();
-		// 最大のIDに１を足す
+
 		if (rs.next()) {
 			maxId = rs.getInt("max_id");
-
 		}
-
-		con.rollback();
 
 		if (rs != null) {
 			rs.close();
@@ -125,18 +121,16 @@ public class KgbanDao {
 		if (ps != null) {
 			ps.close();
 		}
-
 		// 呼び出し元に取得結果を返却
 		return maxId;
-
 	}
 
 	/**
 	 * DBにメッセージを登録.
 	 *
-	 * @param dto 投稿メッセージを格納したDto
+	 * @param KgbanDto 投稿メッセージを格納したDto
 	 */
-	public void insertContent(KgbanPostDto kgbanPostDto) throws SQLException {
+	public void insertUserMessage(KgbanDto kgbanPostDto) throws SQLException {
 		// コネクションクラスの宣言
 		Connection con = null;
 		// ステートメントクラスの宣言
@@ -160,12 +154,12 @@ public class KgbanDao {
 
 		// ステートメントクラスにSQL文を格納
 		ps = con.prepareStatement(builder.toString());
-		
+
 		// パラメータをセット("?"に値を入れる)
 		ps.setInt(1, kgbanPostDto.getId());
 		ps.setString(2, kgbanPostDto.getName());
 		ps.setString(3, kgbanPostDto.getMessage());
-		ps.setTimestamp(4, kgbanPostDto.getTime());
+		ps.setString(4, kgbanPostDto.getTime());
 
 		// SQLを実行
 		ps.executeUpdate();
