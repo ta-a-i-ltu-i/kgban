@@ -29,19 +29,9 @@ public class KgbanService {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public ArrayList<KgbanDto> getUserMessages() throws SQLException {
-
-		ArrayList<KgbanDto> list = new ArrayList<>();
-
-		try {
-
-			// 投稿内容を格納したリストを受け取る
-			list = dao.selectUserMessages();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
-		return list;
+		// 投稿内容を格納したリストを受け取り、呼び出し元へ返す
+		return dao.selectUserMessages();
 	}
 
 	/**
