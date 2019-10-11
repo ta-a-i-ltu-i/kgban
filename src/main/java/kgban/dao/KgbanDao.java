@@ -21,15 +21,16 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
  */
 @Repository
 public class KgbanDao {
-	/**
-	 * DBから投稿内容を取得.
-	 *
-	 * @return 投稿内容を格納したリスト
-	 */
 
 	@Autowired
 	private DataSource dataSource;
 
+	/**
+	 * DBから投稿内容を取得.
+	 * 
+	 * @return 投稿内容を格納したリスト
+	 * @throws SQLException データベースアクセスエラー
+	 */
 	public ArrayList<KgbanDto> selectUserMessages() throws SQLException {
 
 		// コネクションクラスの宣言
@@ -46,15 +47,15 @@ public class KgbanDao {
 		con = DataSourceUtils.getConnection(dataSource);
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT ");
-		builder.append("   id ");
-		builder.append("  ,name ");
-		builder.append("  ,message ");
-		builder.append("  ,created_at ");
-		builder.append("FROM ");
-		builder.append("  message_board ");
-		builder.append("ORDER BY ");
-		builder.append("  id DESC");
+		builder.append("SELECT           ");
+		builder.append("   id            ");
+		builder.append("  ,name          ");
+		builder.append("  ,message       ");
+		builder.append("  ,created_at    ");
+		builder.append("FROM             ");
+		builder.append("  message_board  ");
+		builder.append("ORDER BY         ");
+		builder.append("  id DESC        ");
 
 		// ステートメントクラスにSQL文を格納
 		ps = con.prepareStatement(builder.toString());
@@ -65,15 +66,15 @@ public class KgbanDao {
 		while (rs.next()) {
 
 			// 取得結果を格納するDtoをインスタンス化
-			KgbanDto kgbanGetDto = new KgbanDto();
+			KgbanDto kgbanDto = new KgbanDto();
 			// Dtoに取得結果を格納
-			kgbanGetDto.setId(rs.getInt("id"));
-			kgbanGetDto.setName(rs.getString("name"));
-			kgbanGetDto.setMessage(rs.getString("message"));
-			kgbanGetDto.setTime(sdf.format(rs.getTimestamp("created_at")));
+			kgbanDto.setId(rs.getInt("id"));
+			kgbanDto.setName(rs.getString("name"));
+			kgbanDto.setMessage(rs.getString("message"));
+			kgbanDto.setTime(sdf.format(rs.getTimestamp("created_at")));
 
 			// Dtoに格納された1レコード分のデータをリストに詰める
-			list.add(kgbanGetDto);
+			list.add(kgbanDto);
 		}
 
 		if (rs != null) {
@@ -89,10 +90,15 @@ public class KgbanDao {
 	 * DBから最大のIDを取得.
 	 * 
 	 * @return 最大ID
+	 * @throws SQLException データベースアクセスエラー
 	 */
 	public int getMaxId() throws SQLException {
+		
+		// コネクションクラスの宣言
 		Connection con = null;
+		// ステートメントクラスの宣言
 		PreparedStatement ps = null;
+		// リザルトセットクラスの宣言
 		ResultSet rs = null;
 
 		int maxId = 0;
@@ -127,10 +133,12 @@ public class KgbanDao {
 
 	/**
 	 * DBにメッセージを登録.
-	 *
-	 * @param KgbanDto 投稿メッセージを格納したDto
+	 * 
+	 * @param kgbanDto 投稿メッセージを格納したDto
+	 * @throws SQLException データベースアクセスエラー
 	 */
-	public void insertUserMessage(KgbanDto kgbanPostDto) throws SQLException {
+	public void insertUserMessage(KgbanDto kgbanDto) throws SQLException {
+		
 		// コネクションクラスの宣言
 		Connection con = null;
 		// ステートメントクラスの宣言
@@ -141,25 +149,25 @@ public class KgbanDao {
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("INSERT INTO message_board ( ");
-		builder.append("   id ");
-		builder.append("  ,name ");
-		builder.append("  ,message ");
-		builder.append("  ,created_at ");
-		builder.append(") VALUES ( ");
-		builder.append("   ? ");
-		builder.append("  ,? ");
-		builder.append("  ,? ");
-		builder.append("  ,? ");
-		builder.append(") ");
+		builder.append("   id                       ");
+		builder.append("  ,name                     ");
+		builder.append("  ,message                  ");
+		builder.append("  ,created_at               ");
+		builder.append(") VALUES (                  ");
+		builder.append("   ?                        ");
+		builder.append("  ,?                        ");
+		builder.append("  ,?                        ");
+		builder.append("  ,?                        ");
+		builder.append(" )                          ");
 
 		// ステートメントクラスにSQL文を格納
 		ps = con.prepareStatement(builder.toString());
 
 		// パラメータをセット("?"に値を入れる)
-		ps.setInt(1, kgbanPostDto.getId());
-		ps.setString(2, kgbanPostDto.getName());
-		ps.setString(3, kgbanPostDto.getMessage());
-		ps.setString(4, kgbanPostDto.getTime());
+		ps.setInt(1, kgbanDto.getId());
+		ps.setString(2, kgbanDto.getName());
+		ps.setString(3, kgbanDto.getMessage());
+		ps.setString(4, kgbanDto.getTime());
 
 		// SQLを実行
 		ps.executeUpdate();

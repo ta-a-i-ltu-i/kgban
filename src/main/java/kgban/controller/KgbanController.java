@@ -29,18 +29,26 @@ public class KgbanController {
 	/**
 	 * 過去の投稿を表示.
 	 * 
-	 * @param kgbanform
-	 * @param mav
+	 * @param kgbanform 何も格納されていないForm
+	 * @param mav 画面と過去の投稿一覧
 	 * @return 過去の投稿を格納したリスト
-	 * @throws SQLException
+	 * @throws SQLException データベースアクセスエラー
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView requestUserMessage(@ModelAttribute("form") KgbanForm kgbanform, ModelAndView mav) {
 
-		// 表示画面と過去の投稿をセット
-		mav.setViewName("kgban");
-		ArrayList<KgbanDto> list = service.getUserMessages();
-		mav.addObject("list", list);
+		try {
+			// 表示画面と過去の投稿をセット
+			mav.setViewName("kgban");
+			ArrayList<KgbanDto> list = service.getUserMessages();
+			mav.addObject("list", list);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			mav.setViewName("500");
+			
+			return mav;
+		}
 
 		return mav;
 	}
@@ -49,28 +57,41 @@ public class KgbanController {
 	 * 投稿をBDに登録.
 	 * 
 	 * @param kgbanForm 投稿されたnameとmessage
-	 * @param result
-	 * @param mav
+	 * @param result エラーメッセージ
+	 * @param mav 画面と過去の投稿一覧
 	 * @return 正常:掲示板画面再描画 異常:掲示板画面にエラーメッセージを表示
-	 * @throws SQLException
+	 * @throws SQLException データベースアクセスエラー
 	 */
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView requestForm(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult result,
+	public ModelAndView requestForm(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult bindingResult,
 			ModelAndView mav) {
+		
+		//例外処理
+		try {
 
-		// エラーがなければ掲示板画面再描画を、エラーがあれば掲示板画面とエラーメッセージをreturn
-		if (result.hasErrors()) {
-			mav.setViewName("kgban");
-			ArrayList<KgbanDto> list = service.getUserMessages();
-			mav.addObject("list", list);
+			// エラーがあれば掲示板画面とエラーメッセージを返す
+			if (bindingResult.hasErrors()) {
+				mav.setViewName("kgban");
+				ArrayList<KgbanDto> list = service.getUserMessages();
+				mav.addObject("list", list);
 
+				return mav;
+			}
+
+			//KgbanDtoに登録する内容を格納するメソッド呼び出し
+			service.setUserMessage(kgbanForm);
+
+			//例外があった場合は500エラー画面へ遷移
+		} catch (SQLException e) {
+			e.printStackTrace();
+			mav.setViewName("500");
+			
 			return mav;
 		}
-		service.setUserMessage(kgbanForm);
 
+		// エラーがなければ掲示板画面再描画を返す
 		return new ModelAndView("redirect:/");
-
 	}
 
 }

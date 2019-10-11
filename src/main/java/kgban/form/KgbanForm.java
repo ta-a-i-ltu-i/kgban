@@ -9,12 +9,14 @@ import javax.validation.constraints.Size;
 
 public class KgbanForm {
 	/** 投稿名 */
-	private String name;
-	/** 投稿メッセージ */
-	private String message;
-
 	@NotEmpty(message = "{errors.validation.Required.message}")
 	@Size(max = 12, message = "{errors.validation.MaxSize.message}")
+	private String name;
+	/** 投稿メッセージ */
+	@NotEmpty(message = "{errors.validation.Required.message}")
+	@Size(max = 25, message = "{errors.validation.MaxSize.message}")
+	private String message;
+
 	public String getName() {
 		return name;
 	}
@@ -23,8 +25,6 @@ public class KgbanForm {
 		this.name = name;
 	}
 
-	@NotEmpty(message = "{errors.validation.Required.message}")
-	@Size(max = 25, message = "{errors.validation.MaxSize.message}")
 	public String getMessage() {
 		return message;
 	}
