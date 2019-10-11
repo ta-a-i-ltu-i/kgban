@@ -1,0 +1,57 @@
+@charset "UTF-8";
+/*　掲示板*/
+
+
+/*　タイトル*/
+.title {
+	border: 1px solid #00001c;
+	text-align: center;
+	background-color: #1eff16;
+	margin-bottom: 30px;
+	padding: 3px;
+	font-size: 50px;
+}
+
+/*　投稿エリア*/
+.postArea {
+	width: 90px;
+	margin-left: 5%;
+	font-size: 16px;
+}
+
+.inline-block {
+	display: inline-block;
+	margin-bottom: 20px;
+	padding-left: 0%;
+}
+
+.label {
+	width: 500px;
+}
+
+.name-textbox {
+	width: 170px;
+}
+
+.message-textbox {
+	width: 350px;
+}
+
+.botton {
+	margin-left: 10%;
+	margin-bottom: 20px;
+}
+
+/*　投稿一覧エリア*/
+p.output {
+	float: left;
+	list-style: none;
+	margin: 10px;
+	padding-left: 4%;
+}
+
+.message {
+	clear: both;
+	padding-left: 5%;
+	margin-bottom: 20px;
+}

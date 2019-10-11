@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="kgban.css">
+<title>掲示版</title>
+</head>
+<body>
+  <div class="title">
+    <label>掲示板</label>
+  </div>
+  <form action="./" method="post" th:object="${form}">
+    <div class="postArea inline-block">
+      <label class="label">name</label>
+    </div>
+    <div class="inline-block">
+      <input type="text" class="name-textbox" name="name" placeholder="全半角12文字以内" maxlength="12" required />
+      <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red"></label>
+    </div>
+    <br>
+    <div class="postArea inline-block">
+      <label class="label">message</label>
+    </div>
+    <div class="inline-block">
+      <input type="text" class="message-textbox" name="message" placeholder="全半角25文字以内" maxlength="25" required>
+      <label th:if="${#fields.hasErrors('message')}" th:errors="*{message}" style="color: red"></label>
+    </div>
+    <div>
+      <input type="submit" class="botton" value="投稿">
+    </div>
+  </form>
+  <div th:each="obj:${list}">
+    <hr>
+    <p class="output">
+      <output th:text="${obj.id}"></output>
+      <output th:text="${obj.name}"></output>
+      <output th:text="${obj.time}"></output>
+    </p>
+    <p th:text="${obj.message}" class="message">
+      <output th:text="${obj.message}"></output>
+    </p>
+  </div>
+</body>
+</html>
