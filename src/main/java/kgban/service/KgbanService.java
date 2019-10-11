@@ -29,7 +29,7 @@ public class KgbanService {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public ArrayList<KgbanDto> getUserMessages() throws SQLException {
-		
+
 		// 投稿内容を格納したリストを受け取り、呼び出し元へ返す
 		return dao.selectUserMessages();
 	}
@@ -43,18 +43,18 @@ public class KgbanService {
 	@Transactional
 	public void setUserMessage(KgbanForm kgbanForm) throws SQLException {
 
-			// 最大IDを取得する
-			int maxId = dao.getMaxId();
+		// 最大IDを取得する
+		int maxId = dao.getMaxId();
 
-			// KgbanDtoに登録する内容を格納する
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-			KgbanDto dto = new KgbanDto();
-			dto.setId(maxId + 1);
-			dto.setName(kgbanForm.getName());
-			dto.setMessage(kgbanForm.getMessage());
-			dto.setTime(sdf.format(new Timestamp(System.currentTimeMillis())));
+		// KgbanDtoに登録する内容を格納する
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+		KgbanDto dto = new KgbanDto();
+		dto.setId(maxId + 1);
+		dto.setName(kgbanForm.getName());
+		dto.setMessage(kgbanForm.getMessage());
+		dto.setTime(sdf.format(new Timestamp(System.currentTimeMillis())));
 
-			dao.insertUserMessage(dto);
+		dao.insertUserMessage(dto);
 	}
 
 }

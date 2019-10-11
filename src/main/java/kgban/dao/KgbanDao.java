@@ -93,7 +93,7 @@ public class KgbanDao {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public int getMaxId() throws SQLException {
-		
+
 		// コネクションクラスの宣言
 		Connection con = null;
 		// ステートメントクラスの宣言
@@ -138,7 +138,7 @@ public class KgbanDao {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public void insertUserMessage(KgbanDto kgbanDto) throws SQLException {
-		
+
 		// コネクションクラスの宣言
 		Connection con = null;
 		// ステートメントクラスの宣言

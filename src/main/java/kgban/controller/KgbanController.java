@@ -30,7 +30,7 @@ public class KgbanController {
 	 * 過去の投稿を表示.
 	 * 
 	 * @param kgbanform 何も格納されていないForm
-	 * @param mav 画面と過去の投稿一覧
+	 * @param mav       画面と過去の投稿一覧
 	 * @return 過去の投稿を格納したリスト
 	 * @throws SQLException データベースアクセスエラー
 	 */
@@ -46,7 +46,7 @@ public class KgbanController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			mav.setViewName("500");
-			
+
 			return mav;
 		}
 
@@ -57,8 +57,8 @@ public class KgbanController {
 	 * 投稿をBDに登録.
 	 * 
 	 * @param kgbanForm 投稿されたnameとmessage
-	 * @param result エラーメッセージ
-	 * @param mav 画面と過去の投稿一覧
+	 * @param result    エラーメッセージ
+	 * @param mav       画面と過去の投稿一覧
 	 * @return 正常:掲示板画面再描画 異常:掲示板画面にエラーメッセージを表示
 	 * @throws SQLException データベースアクセスエラー
 	 */
@@ -66,8 +66,8 @@ public class KgbanController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public ModelAndView requestForm(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult bindingResult,
 			ModelAndView mav) {
-		
-		//例外処理
+
+		// 例外処理
 		try {
 
 			// エラーがあれば掲示板画面とエラーメッセージを返す
@@ -79,14 +79,14 @@ public class KgbanController {
 				return mav;
 			}
 
-			//KgbanDtoに登録する内容を格納するメソッド呼び出し
+			// KgbanDtoに登録する内容を格納するメソッド呼び出し
 			service.setUserMessage(kgbanForm);
 
-			//例外があった場合は500エラー画面へ遷移
+			// 例外があった場合は500エラー画面へ遷移
 		} catch (SQLException e) {
 			e.printStackTrace();
 			mav.setViewName("500");
-			
+
 			return mav;
 		}
 
