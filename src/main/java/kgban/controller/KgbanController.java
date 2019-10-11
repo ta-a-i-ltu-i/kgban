@@ -30,12 +30,12 @@ public class KgbanController {
 	 * 過去の投稿を表示.
 	 * 
 	 * @param kgbanform 何も格納されていないForm
-	 * @param mav       画面と過去の投稿一覧
+	 * @param mav       モデルおよび遷移先画面を設定するクラス
 	 * @return 過去の投稿を格納したリスト
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView requestUserMessage(@ModelAttribute("form") KgbanForm kgbanform, ModelAndView mav) {
+	public ModelAndView requestUserMessage(@ModelAttribute("form") KgbanForm kgbanForm, ModelAndView mav) {
 
 		try {
 			// 表示画面と過去の投稿をセット
@@ -58,7 +58,7 @@ public class KgbanController {
 	 * 
 	 * @param kgbanForm 投稿されたnameとmessage
 	 * @param result    エラーメッセージ
-	 * @param mav       画面と過去の投稿一覧
+	 * @param mav       モデルおよび遷移先画面を設定するクラス
 	 * @return 正常:掲示板画面再描画 異常:掲示板画面にエラーメッセージを表示
 	 * @throws SQLException データベースアクセスエラー
 	 */

@@ -1,10 +1,9 @@
 package kgban.dto;
 
+/**
+ * データ登録用掲示板Dto.
+ */
 public class KgbanDto {
-
-	/**
-	 * データ登録用掲示板Dto.
-	 */
 
 	/** ID */
 	private int id;
