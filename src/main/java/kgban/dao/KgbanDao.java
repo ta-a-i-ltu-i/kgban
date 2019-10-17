@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -54,6 +55,8 @@ public class KgbanDao {
 		builder.append("  ,created_at    ");
 		builder.append("FROM             ");
 		builder.append("  message_board  ");
+		builder.append("WHERE            ");
+		builder.append("  is_invalid = 0 ");
 		builder.append("ORDER BY         ");
 		builder.append("  id DESC        ");
 
@@ -176,6 +179,125 @@ public class KgbanDao {
 			ps.close();
 		}
 
+	}
+
+	/**
+	 * 削除可能なデータかしらべる
+	 */
+
+	public int getIdCount(int id) throws SQLException {
+		// コネクションクラスの宣言
+		Connection con = null;
+		// ステートメントクラスの宣言
+		PreparedStatement ps = null;
+		// データベースとの接続を行う
+		con = DataSourceUtils.getConnection(dataSource);
+
+		int countId = 0;
+
+		// 最大のIDを取得
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT                     ");
+		builder.append("  COUNT( id )              ");
+		builder.append("FROM                       ");
+		builder.append("  message_board            ");
+		builder.append("WHERE                      ");
+		builder.append("  id = ?                   ");
+
+		// ステートメントクラスにSQL文を格納
+		ps = con.prepareStatement(builder.toString());
+		ps.setInt(1, id);
+		// SQLを実行して取得結果をリザルトセットに格納
+		countId = ps.executeUpdate();
+
+		if (ps != null) {
+			ps.close();
+		}
+		// 呼び出し元に取得結果を返却
+		return countId;
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getIsInvalid(int id) throws SQLException {
+
+		// コネクションクラスの宣言
+		Connection con = null;
+		// ステートメントクラスの宣言
+		PreparedStatement ps = null;
+		// リザルトセットクラスの宣言
+		ResultSet rs = null;
+
+		int isInvalid = 0;
+		// データベースとの接続を行う
+		con = DataSourceUtils.getConnection(dataSource);
+
+		// 最大のIDを取得
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT                     ");
+		builder.append("  is_invalid               ");
+		builder.append("FROM                       ");
+		builder.append("  message_board            ");
+		builder.append("WHERE                      ");
+		builder.append("  id = ?                   ");
+
+		// ステートメントクラスにSQL文を格納
+		ps = con.prepareStatement(builder.toString());
+		ps.setInt(1, id);
+		// SQLを実行して取得結果をリザルトセットに格納
+		rs = ps.executeQuery();
+
+		if (rs.next()) {
+			isInvalid = rs.getInt("is_invalid");
+		}
+
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		// 呼び出し元に取得結果を返却
+		return isInvalid;
+
+	}
+
+	/**
+	 * 削除する
+	 * 
+	 */
+	public int getDeleteCount(int id) throws SQLException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		int deleteCount = 0;
+
+		con = DataSourceUtils.getConnection(dataSource);
+
+		// 削除するmessageのIDを取得
+		StringBuilder builder = new StringBuilder();
+		builder.append("UPDATE                    ");
+		builder.append(" message_board            ");
+		builder.append("SET                       ");
+		builder.append(" is_invalid = 1           ");
+		builder.append("WHERE                     ");
+		builder.append(" is_invalid = 0           ");
+		builder.append("AND                       ");
+		builder.append(" id = ?                   ");
+
+		// ステートメントクラスにSQL文を格納
+		ps = con.prepareStatement(builder.toString());
+		ps.setInt(1, id);
+		// SQLを実行
+		deleteCount = ps.executeUpdate();
+
+		if (ps != null) {
+			ps.close();
+		}
+
+		return deleteCount;
 	}
 
 }

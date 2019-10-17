@@ -57,4 +57,21 @@ public class KgbanService {
 		dao.insertUserMessage(dto);
 	}
 
+	//IDが使われているか確認するメソッド
+	public int idCount(int id) throws SQLException {
+		
+		return dao.getIdCount(id);
+	}
+
+	//すでに削除されていないか確認するメソッド
+	public int getIsInvald(int id) throws SQLException{
+		
+		return dao.getIsInvalid(id);
+	}
+
+	public int postDelete(int id) throws SQLException{
+		
+		return dao.getDeleteCount(id);
+	}
+
 }

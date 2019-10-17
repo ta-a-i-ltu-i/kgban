@@ -6,11 +6,13 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import kgban.dto.KgbanDto;
@@ -94,4 +96,35 @@ public class KgbanController {
 		return new ModelAndView("redirect:/");
 	}
 
+	/**
+	 * 削除処理
+	 */
+	@Transactional
+	@RequestMapping(value = "/DELETE", method = RequestMethod.POST)
+	public ModelAndView send(@RequestParam("id") int id, ModelAndView mav, BindingResult bindingResult) {
+
+		try {
+			//送られてきたIDの投稿があるかチェックするメソッド
+			if (service.idCount(id) == 1) {
+				//削除したい投稿が既に削除されていないかチェックする投稿
+				if (service.getIsInvald(id) == 0) {
+					//送られてきたIDの投稿を削除するメソッド
+					service.postDelete(id);
+					mav.setViewName("MessageBoard");
+					return new ModelAndView("redirect:/");
+				}//削除失敗のダイアログ表示
+			}
+			//500エラー画面に遷移
+			mav.setViewName("500");
+			return mav;
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			mav.setViewName("500");
+
+			return mav;
+		}
+
+	}
 }
