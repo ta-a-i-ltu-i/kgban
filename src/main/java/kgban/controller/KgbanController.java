@@ -105,20 +105,18 @@ public class KgbanController {
 	/**
 	 * 削除処理.
 	 * 
-	 * @param id
-	 * @param mav
-	 * @param bindingResult
-	 * @param redirectAttributes
-	 * @return
+	 * @param id 削除したい投稿のID
+	 * @param mav モデルおよび遷移先画面を設定するクラス
+	 * @param redirectAttributes リダイレクト先にメッセージを送る
+	 * @return 500エラー画面もしくは掲示板画面
 	 */
 	@Transactional
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public ModelAndView send(@RequestParam("id") int id, ModelAndView mav, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
+	public ModelAndView send(@RequestParam("id") int id, ModelAndView mav, RedirectAttributes redirectAttributes) {
 
 		try {
 			// 送られてきたIDの投稿があるかチェックするメソッド
-			if (service.countId(id) == 1) {
+			if (service.getCountId(id) == 1) {
 				
 				// 削除したい投稿が既に削除されていないかチェックする投稿
 				if (service.getIsInvald(id) == 0) {

@@ -65,9 +65,9 @@ public class KgbanService {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	// IDが使われているか確認するメソッド
-	public int countId(int id) throws SQLException {
+	public int getCountId(int id) throws SQLException {
 
-		return dao.getCountId(id);
+		return dao.countId(id);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class KgbanService {
 	// すでに削除されていないか確認するメソッド
 	public int getIsInvald(int id) throws SQLException {
 
-		return dao.getIsInvalid(id);
+		return dao.selectIsInvalid(id);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class KgbanService {
 	 */
 	public void postDelete(int id) throws SQLException {
 
-		dao.delete(id);
+		dao.UpdateDelete(id);
 	}
 
 }

@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 @PropertySource({"classpath:/ValidationMessages.properties",
-    "classpath:/MessageResources.properties", "classpath:/application.properties"})
+    "classpath:/MessageResources.properties"})
 public class PropertyConfig {
 
   @Autowired

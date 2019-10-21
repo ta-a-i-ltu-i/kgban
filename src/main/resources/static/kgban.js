@@ -16,7 +16,7 @@ function disp() {
 window.onload = function() {
 	var del = document.getElementById('deleteMessage').value;
 	var size = del.length;
-	if (size > 1) {
+	if (size > 0) {
 		alert(del);
 	}
 }

@@ -187,7 +187,7 @@ public class KgbanDao {
 	 * @return 削除したい投稿のIDと同じIDの投稿の数
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public int getCountId(int id) throws SQLException {
+	public int countId(int id) throws SQLException {
 		// コネクションクラスの宣言
 		Connection con = null;
 		// ステートメントクラスの宣言
@@ -227,7 +227,7 @@ public class KgbanDao {
 	 * @return 無効フラグの値
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public int getIsInvalid(int id) throws SQLException {
+	public int selectIsInvalid(int id) throws SQLException {
 
 		// コネクションクラスの宣言
 		Connection con = null;
@@ -276,7 +276,7 @@ public class KgbanDao {
 	 * @param id 削除したい投稿のID
 	 * @throws SQLException データべースアクセスエラー
 	 */
-	public void delete(int id) throws SQLException {
+	public void UpdateDelete(int id) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
 
