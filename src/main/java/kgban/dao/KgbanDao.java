@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -182,10 +181,13 @@ public class KgbanDao {
 	}
 
 	/**
-	 * 削除可能なデータかしらべる
+	 * 削除したい投稿のIDと同じIDの投稿の数を取得.
+	 * 
+	 * @param id 削除したい投稿のID
+	 * @return 削除したい投稿のIDと同じIDの投稿の数
+	 * @throws SQLException データベースアクセスエラー
 	 */
-
-	public int getIdCount(int id) throws SQLException {
+	public int getCountId(int id) throws SQLException {
 		// コネクションクラスの宣言
 		Connection con = null;
 		// ステートメントクラスの宣言
@@ -219,8 +221,11 @@ public class KgbanDao {
 	}
 
 	/**
+	 * 削除したい投稿の無効フラグの値を取得.
 	 * 
-	 * @return
+	 * @param id 削除したい投稿のID
+	 * @return 無効フラグの値
+	 * @throws SQLException データベースアクセスエラー
 	 */
 	public int getIsInvalid(int id) throws SQLException {
 
@@ -266,13 +271,14 @@ public class KgbanDao {
 	}
 
 	/**
-	 * 削除する
+	 * 無効フラグの値を1に変える.
 	 * 
+	 * @param id 削除したい投稿のID
+	 * @throws SQLException データべースアクセスエラー
 	 */
-	public int getDeleteCount(int id) throws SQLException {
+	public void delete(int id) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
-		int deleteCount = 0;
 
 		con = DataSourceUtils.getConnection(dataSource);
 
@@ -291,13 +297,12 @@ public class KgbanDao {
 		ps = con.prepareStatement(builder.toString());
 		ps.setInt(1, id);
 		// SQLを実行
-		deleteCount = ps.executeUpdate();
+		ps.executeUpdate();
 
 		if (ps != null) {
 			ps.close();
 		}
 
-		return deleteCount;
 	}
 
 }

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kgban.config.PropertyConfig;
 import kgban.dto.KgbanDto;
 import kgban.form.KgbanForm;
 import kgban.service.KgbanService;
@@ -27,6 +29,8 @@ public class KgbanController {
 
 	@Autowired
 	private KgbanService service;
+	@Autowired
+	private PropertyConfig propertyConfig;
 
 	/**
 	 * 過去の投稿を表示.
@@ -39,6 +43,7 @@ public class KgbanController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView requestUserMessage(@ModelAttribute("form") KgbanForm kgbanForm, ModelAndView mav) {
 
+		//例外処理
 		try {
 			// 表示画面と過去の投稿をセット
 			mav.setViewName("kgban");
@@ -46,6 +51,7 @@ public class KgbanController {
 			mav.addObject("list", list);
 
 		} catch (SQLException e) {
+			//例外があった場合500エラー画面に遷移
 			e.printStackTrace();
 			mav.setViewName("500");
 
@@ -97,28 +103,46 @@ public class KgbanController {
 	}
 
 	/**
-	 * 削除処理
+	 * 削除処理.
+	 * 
+	 * @param id
+	 * @param mav
+	 * @param bindingResult
+	 * @param redirectAttributes
+	 * @return
 	 */
 	@Transactional
-	@RequestMapping(value = "/DELETE", method = RequestMethod.POST)
-	public ModelAndView send(@RequestParam("id") int id, ModelAndView mav, BindingResult bindingResult) {
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public ModelAndView send(@RequestParam("id") int id, ModelAndView mav, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
 
 		try {
-			//送られてきたIDの投稿があるかチェックするメソッド
-			if (service.idCount(id) == 1) {
-				//削除したい投稿が既に削除されていないかチェックする投稿
+			// 送られてきたIDの投稿があるかチェックするメソッド
+			if (service.countId(id) == 1) {
+				
+				// 削除したい投稿が既に削除されていないかチェックする投稿
 				if (service.getIsInvald(id) == 0) {
-					//送られてきたIDの投稿を削除するメソッド
+
+					// 送られてきたIDの投稿を削除するメソッド
 					service.postDelete(id);
 					mav.setViewName("MessageBoard");
+					redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("ok.app.delete"));
+
 					return new ModelAndView("redirect:/");
-				}//削除失敗のダイアログ表示
+				} else {
+
+					// 投稿が既に削除されていた場合エラーメッセージとともに掲示板再描画
+					redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("error.app.delete"));
+
+					return new ModelAndView("redirect:/");
+				}
 			}
-			//500エラー画面に遷移
+			// 送られてきたIDの投稿が１件ではなかった場合500エラー画面に遷移
 			mav.setViewName("500");
+
 			return mav;
 
-			
+			// 想定外エラーの場合500エラー画面に遷移
 		} catch (SQLException e) {
 			e.printStackTrace();
 			mav.setViewName("500");
@@ -127,4 +151,5 @@ public class KgbanController {
 		}
 
 	}
+
 }
