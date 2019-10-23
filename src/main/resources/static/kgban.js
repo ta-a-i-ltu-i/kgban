@@ -2,8 +2,8 @@
  * 掲示板JS
  */
 
-//削除ボタン押下時のダイアログ
-function disp() {
+// 削除ボタン押下時のダイアログ
+function deletePost() {
 	if (window.confirm('本当に削除しますか？')) {
 		return true;
 	} else {
@@ -12,11 +12,11 @@ function disp() {
 	}
 }
 
-//削除失敗時のダイアログ
+// 削除処理終了時のメッセージ表示のダイアログ
 window.onload = function() {
-	var del = document.getElementById('deleteMessage').value;
-	var size = del.length;
+	var result = document.getElementById('deleteMessage').value;
+	var size = result.length;
 	if (size > 0) {
-		alert(del);
+		alert(result);
 	}
 }

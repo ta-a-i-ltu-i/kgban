@@ -181,23 +181,20 @@ public class KgbanDao {
 	}
 
 	/**
-	 * 削除したい投稿のIDと同じIDの投稿の数を取得.
+	 * 画面から送られてきたIDと同じIDの投稿の数を取得.
 	 * 
-	 * @param id 削除したい投稿のID
-	 * @return 削除したい投稿のIDと同じIDの投稿の数
+	 * @param id 画面から送られてきたID
+	 * @return 送られてきたIDと同じIDの投稿の数の真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public int countId(int id) throws SQLException {
-		// コネクションクラスの宣言
-		Connection con = null;
-		// ステートメントクラスの宣言
-		PreparedStatement ps = null;
-		// データベースとの接続を行う
-		con = DataSourceUtils.getConnection(dataSource);
+	public boolean countId(int id) throws SQLException {
 
-		int countId = 0;
+		boolean existsId = false;
 
-		// 最大のIDを取得
+		// コネクションクラスの宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
+
+		// 画面から送られてきたIDと同じIDの数を取得
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT                     ");
 		builder.append("  COUNT( id )              ");
@@ -206,41 +203,40 @@ public class KgbanDao {
 		builder.append("WHERE                      ");
 		builder.append("  id = ?                   ");
 
-		// ステートメントクラスにSQL文を格納
-		ps = con.prepareStatement(builder.toString());
+		// ステートメントクラスの宣言し、SQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
 		ps.setInt(1, id);
 		// SQLを実行して取得結果をリザルトセットに格納
-		countId = ps.executeUpdate();
+		int countId = ps.executeUpdate();
+
+		if (countId == 1) {
+			existsId = true;
+		}
 
 		if (ps != null) {
 			ps.close();
 		}
 		// 呼び出し元に取得結果を返却
-		return countId;
+		return existsId;
 
 	}
 
 	/**
-	 * 削除したい投稿の無効フラグの値を取得.
+	 * 画面から送られてきたIDの投稿の無効フラグの値を取得.
 	 * 
-	 * @param id 削除したい投稿のID
-	 * @return 無効フラグの値
+	 * @param id 画面から送られてきたID
+	 * @return 無効フラグの値の真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public int selectIsInvalid(int id) throws SQLException {
+	public boolean selectIsInvalid(int id) throws SQLException {
 
-		// コネクションクラスの宣言
-		Connection con = null;
-		// ステートメントクラスの宣言
-		PreparedStatement ps = null;
-		// リザルトセットクラスの宣言
-		ResultSet rs = null;
+		int invalidFlag = 0;
+		boolean isInvalid = false;
 
-		int isInvalid = 0;
-		// データベースとの接続を行う
-		con = DataSourceUtils.getConnection(dataSource);
+		// コネクションクラスの宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
 
-		// 最大のIDを取得
+		// 無効フラグの値を取得
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT                     ");
 		builder.append("  is_invalid               ");
@@ -249,14 +245,17 @@ public class KgbanDao {
 		builder.append("WHERE                      ");
 		builder.append("  id = ?                   ");
 
-		// ステートメントクラスにSQL文を格納
-		ps = con.prepareStatement(builder.toString());
+		// ステートメントクラスの宣言し、にSQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
 		ps.setInt(1, id);
-		// SQLを実行して取得結果をリザルトセットに格納
-		rs = ps.executeQuery();
+		// リザルトセットクラスの宣言をし、SQLを実行して取得結果をリザルトセットに格納
+		ResultSet rs = ps.executeQuery();
 
 		if (rs.next()) {
-			isInvalid = rs.getInt("is_invalid");
+			invalidFlag = rs.getInt("is_invalid");
+		}
+		if (invalidFlag == 0) {
+			isInvalid = true;
 		}
 
 		if (rs != null) {
@@ -271,16 +270,15 @@ public class KgbanDao {
 	}
 
 	/**
-	 * 無効フラグの値を1に変える.
+	 * 無効フラグの値を0から1に変える.
 	 * 
-	 * @param id 削除したい投稿のID
+	 * @param 画面から送られてきたID
 	 * @throws SQLException データべースアクセスエラー
 	 */
-	public void UpdateDelete(int id) throws SQLException {
-		Connection con = null;
-		PreparedStatement ps = null;
+	public void updateDelete(int id) throws SQLException {
 
-		con = DataSourceUtils.getConnection(dataSource);
+		// コネクションクラスの宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
 
 		// 削除するmessageのIDを取得
 		StringBuilder builder = new StringBuilder();
@@ -293,8 +291,8 @@ public class KgbanDao {
 		builder.append("AND                       ");
 		builder.append(" id = ?                   ");
 
-		// ステートメントクラスにSQL文を格納
-		ps = con.prepareStatement(builder.toString());
+		// ステートメントクラスの宣言し、にSQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
 		ps.setInt(1, id);
 		// SQLを実行
 		ps.executeUpdate();

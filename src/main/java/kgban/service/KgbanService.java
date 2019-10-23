@@ -58,40 +58,40 @@ public class KgbanService {
 	}
 
 	/**
-	 * 削除したい投稿のIDと同じIDの投稿の数を取得.
+	 * 画面から送られてきたIDと同じIDの投稿の数を取得.
 	 * 
-	 * @param id 削除したい投稿のID
-	 * @return 削除したい投稿のIDと同じIDの投稿の数
+	 * @param id 画面から送られてきたID
+	 * @return 画面から送られてきたIDと同じIDがあるかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	// IDが使われているか確認するメソッド
-	public int getCountId(int id) throws SQLException {
+	public boolean getCountId(int id) throws SQLException {
 
+		// IDが使われているか確認するメソッド
 		return dao.countId(id);
 	}
 
 	/**
-	 * 削除したい投稿の無効フラグの値を取得.
+	 * 画面から送られてきたIDの投稿の無効フラグの値を取得.
 	 * 
-	 * @param id 削除したい投稿のID
-	 * @return 無効フラグの値
+	 * @param id 画面から送られてきたID
+	 * @return 無効フラグの値の真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	// すでに削除されていないか確認するメソッド
-	public int getIsInvald(int id) throws SQLException {
+	public boolean getIsInvald(int id) throws SQLException {
 
+		// すでに削除されていないか確認するメソッド
 		return dao.selectIsInvalid(id);
 	}
 
 	/**
-	 * 削除したい投稿を無効にする.
+	 * 削除したい投稿の無効フラグを無効にする.
 	 * 
 	 * @param id 削除したい投稿のID
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public void postDelete(int id) throws SQLException {
 
-		dao.UpdateDelete(id);
+		dao.updateDelete(id);
 	}
 
 }
