@@ -41,7 +41,7 @@ public class KgbanService {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	@Transactional
-	public void saveUserMessage(KgbanForm kgbanForm) throws SQLException {
+	public void setUserMessage(KgbanForm kgbanForm) throws SQLException {
 
 		// 最大IDを取得する
 		int maxId = dao.getMaxId();
@@ -64,20 +64,20 @@ public class KgbanService {
 	 * @return 画面から送られてきたIDと同じIDの投稿が１件のみかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public boolean getCountId(int id) throws SQLException {
+	public int countUserMessage(int id) throws SQLException {
 
 		// 画面から送られてきたIDが使われているか確認するメソッド
-		return dao.countId(id);
+		return dao.getCountId(id);
 	}
 
 	/**
-	 * 画面から送られてきたIDの投稿が既に無効になっていないかの確認する.
+	 * 画面から送られてきたIDの投稿が既に無効になっていないか確認する.
 	 * 
 	 * @param id 画面から送られてきたID
 	 * @return 画面から送られてきたIDの投稿が既に削除されていないかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public boolean canDeleteUserMessage(int id) throws SQLException {
+	public boolean checkInvalidMessage(int id) throws SQLException {
 
 		// 既に無効になっていないか確認するメソッド
 		return dao.selectIsInvalid(id);
@@ -92,7 +92,7 @@ public class KgbanService {
 	public void deleteUserMessage(int id) throws SQLException {
 
 		// 送られてきたIDの投稿の無効フラグを0→1に変えるメソッド
-		dao.updateIsInvalid(id);
+		dao.updateInvalidMessage(id);
 	}
 
 }

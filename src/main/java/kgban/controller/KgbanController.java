@@ -71,7 +71,7 @@ public class KgbanController {
 	 */
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView saveUserForm(@ModelAttribute("form") @Validated KgbanForm kgbanForm,
+	public ModelAndView saveUserMessage(@ModelAttribute("form") @Validated KgbanForm kgbanForm,
 			BindingResult bindingResult, ModelAndView mav) {
 
 		try {
@@ -86,7 +86,7 @@ public class KgbanController {
 			}
 
 			// KgbanDtoに登録する内容を格納するメソッド呼び出し
-			service.saveUserMessage(kgbanForm);
+			service.setUserMessage(kgbanForm);
 
 		} catch (SQLException e) {
 			// 例外があった場合は500エラー画面へ遷移
@@ -115,20 +115,20 @@ public class KgbanController {
 
 		try {
 			// 送られてきたIDの投稿があるかチェック
-			if (!service.getCountId(id)) {
+			if (service.countUserMessage(id) != 1) {
 				// 送られてきたIDの投稿が１件ではなかった場合400エラー画面に遷移
 				mav.setViewName("400");
 				return mav;
 			}
 
 			// 送られてきたIDの投稿が既に削除されていないかチェック
-			if (!service.canDeleteUserMessage(id)) {
+			if (!service.checkInvalidMessage(id)) {
 				// 投稿が既に削除されていた場合エラーメッセージとともに掲示板再描画
 				redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("error.app.delete"));
 				return new ModelAndView("redirect:/");
 			}
 
-			// 送られてきたIDの投稿の無効フラグを0から1に変えるメソッド
+			// 送られてきたIDの投稿を削除するメソッド
 			service.deleteUserMessage(id);
 			mav.setViewName("MessageBoard");
 			redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("ok.app.delete"));

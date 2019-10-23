@@ -165,15 +165,15 @@ public class KgbanDao {
 	}
 
 	/**
-	 * 画面から送られてきたIDと同じIDの投稿が１件のみか確認する.
+	 * 画面から送られてきたIDと同じIDの投稿数を取得する.
 	 * 
 	 * @param id 画面から送られてきたID
 	 * @return 送られてきたIDと同じIDの投稿が１件かどうかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public boolean countId(int id) throws SQLException {
+	public int getCountId(int id) throws SQLException {
 
-		boolean existsId = false;
+		int countId = 0;
 
 		// コネクションクラスの宣言し、データベースとの接続を行う
 		Connection con = DataSourceUtils.getConnection(dataSource);
@@ -194,8 +194,8 @@ public class KgbanDao {
 		ResultSet rs = ps.executeQuery();
 
 		// 取得結果が１件ならtrueを返す
-		if (rs.next() && rs.getInt("COUNT(id)") == 1) {
-			existsId = true;
+		if (rs.next()) {
+			countId = rs.getInt("COUNT(id)");
 		}
 
 		if (rs != null) {
@@ -206,7 +206,7 @@ public class KgbanDao {
 			ps.close();
 		}
 		// 呼び出し元に取得結果を返却
-		return existsId;
+		return countId;
 
 	}
 
@@ -262,7 +262,7 @@ public class KgbanDao {
 	 * @param 画面から送られてきたID
 	 * @throws SQLException データべースアクセスエラー
 	 */
-	public void updateIsInvalid(int id) throws SQLException {
+	public void updateInvalidMessage(int id) throws SQLException {
 
 		// コネクションクラスの宣言し、データベースとの接続を行う
 		Connection con = DataSourceUtils.getConnection(dataSource);
