@@ -41,7 +41,7 @@ public class KgbanService {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	@Transactional
-	public void setUserMessage(KgbanForm kgbanForm) throws SQLException {
+	public void saveUserMessage(KgbanForm kgbanForm) throws SQLException {
 
 		// 最大IDを取得する
 		int maxId = dao.getMaxId();
@@ -58,10 +58,10 @@ public class KgbanService {
 	}
 
 	/**
-	 * 画面から送られてきたIDと同じIDの投稿の数を取得.
+	 * 画面から送られてきたIDと同じIDの投稿が１件のみか確認する.
 	 * 
 	 * @param id 画面から送られてきたID
-	 * @return 画面から送られてきたIDと同じIDがあるかの真偽
+	 * @return 画面から送られてきたIDと同じIDの投稿が１件のみかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public boolean getCountId(int id) throws SQLException {
@@ -71,13 +71,13 @@ public class KgbanService {
 	}
 
 	/**
-	 * 画面から送られてきたIDの投稿の無効フラグの値を取得.
+	 * 画面から送られてきたIDの投稿が既に無効になっていないかの確認する.
 	 * 
 	 * @param id 画面から送られてきたID
-	 * @return 無効フラグの値の真偽
+	 * @return 画面から送られてきたIDの投稿が既に削除されていないかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public boolean getIsInvald(int id) throws SQLException {
+	public boolean canDeleteUserMessage(int id) throws SQLException {
 
 		// すでに削除されていないか確認するメソッド
 		return dao.selectIsInvalid(id);
@@ -89,9 +89,9 @@ public class KgbanService {
 	 * @param id 削除したい投稿のID
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public void postDelete(int id) throws SQLException {
+	public void deleteUserMessage(int id) throws SQLException {
 
-		dao.updateDelete(id);
+		dao.updateIsInvalid(id);
 	}
 
 }

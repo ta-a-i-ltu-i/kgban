@@ -43,7 +43,7 @@
       <div>
         <form method="post" action="/delete">
           <input type="hidden" name="id" th:value="${obj.id}">
-          <input id="delete" type="submit" value="削除" onclick="return deletePost()" />
+          <input id="delete" type="submit" value="削除" onclick="return deleteUserMessage()" />
         </form>
         <input type="hidden" id="deleteMessage" th:value="${resultMessage}">
       </div>

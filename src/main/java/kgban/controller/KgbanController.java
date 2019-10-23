@@ -71,8 +71,8 @@ public class KgbanController {
 	 */
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView requestForm(@ModelAttribute("form") @Validated KgbanForm kgbanForm, BindingResult bindingResult,
-			ModelAndView mav) {
+	public ModelAndView saveUserForm(@ModelAttribute("form") @Validated KgbanForm kgbanForm,
+			BindingResult bindingResult, ModelAndView mav) {
 
 		try {
 
@@ -86,7 +86,7 @@ public class KgbanController {
 			}
 
 			// KgbanDtoに登録する内容を格納するメソッド呼び出し
-			service.setUserMessage(kgbanForm);
+			service.saveUserMessage(kgbanForm);
 
 		} catch (SQLException e) {
 			// 例外があった場合は500エラー画面へ遷移
@@ -106,44 +106,34 @@ public class KgbanController {
 	 * @param id                 削除したい投稿のID
 	 * @param mav                モデルおよび遷移先画面を設定するクラス
 	 * @param redirectAttributes リダイレクト先にメッセージを送る
-	 * @return 500エラー画面もしくは掲示板画面
+	 * @return 掲示板画面もしくは500エラー画面
 	 */
 	@Transactional
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public ModelAndView delete(@RequestParam("id") int id, ModelAndView mav, RedirectAttributes redirectAttributes) {
-
-		boolean existsId = false;
-		boolean canDelete = false;
+	public ModelAndView deleteUserMessage(@RequestParam("id") int id, ModelAndView mav,
+			RedirectAttributes redirectAttributes) {
 
 		try {
 			// 送られてきたIDの投稿があるかチェック
-			if (service.getCountId(id)) {
-				existsId = true;
-			} else {
+			if (!service.getCountId(id)) {
 				// 送られてきたIDの投稿が１件ではなかった場合500エラー画面に遷移
-				mav.setViewName("500");
+				mav.setViewName("400");
 				return mav;
 			}
 
 			// 送られてきたIDの投稿が既に削除されていないかチェック
-			if (service.getIsInvald(id)) {
-				canDelete = true;
-			} else {
+			if (!service.canDeleteUserMessage(id)) {
 				// 投稿が既に削除されていた場合エラーメッセージとともに掲示板再描画
 				redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("error.app.delete"));
 				return new ModelAndView("redirect:/");
 			}
 
 			// 削除処理を実行
-			if (existsId && canDelete) {
-				// 送られてきたIDの投稿の無効フラグを0から1に変えるメソッド
-				service.postDelete(id);
-				mav.setViewName("MessageBoard");
-				redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("ok.app.delete"));
-				return new ModelAndView("redirect:/");
-			}
-			mav.setViewName("500");
-			return mav;
+			// 送られてきたIDの投稿の無効フラグを0から1に変えるメソッド
+			service.deleteUserMessage(id);
+			mav.setViewName("MessageBoard");
+			redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("ok.app.delete"));
+			return new ModelAndView("redirect:/");
 
 		} catch (SQLException e) {
 			// 想定外エラーの場合500エラー画面に遷移

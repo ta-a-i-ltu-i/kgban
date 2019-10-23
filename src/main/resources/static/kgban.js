@@ -3,7 +3,7 @@
  */
 
 // 削除ボタン押下時のダイアログ
-function deletePost() {
+function deleteUserMessage() {
 	if (window.confirm('本当に削除しますか？')) {
 		return true;
 	} else {

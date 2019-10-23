@@ -181,10 +181,10 @@ public class KgbanDao {
 	}
 
 	/**
-	 * 画面から送られてきたIDと同じIDの投稿の数を取得.
+	 * 画面から送られてきたIDと同じIDの投稿が１件のみか確認する.
 	 * 
 	 * @param id 画面から送られてきたID
-	 * @return 送られてきたIDと同じIDの投稿の数の真偽
+	 * @return 送られてきたIDと同じIDの投稿が１件かどうかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public boolean countId(int id) throws SQLException {
@@ -207,9 +207,10 @@ public class KgbanDao {
 		PreparedStatement ps = con.prepareStatement(builder.toString());
 		ps.setInt(1, id);
 		// SQLを実行して取得結果をリザルトセットに格納
-		int countId = ps.executeUpdate();
+		ResultSet rs = ps.executeQuery();
 
-		if (countId == 1) {
+		// 取得結果が１件ならtrueを返す
+		if (rs.next() && rs.getInt("COUNT(id)") == 1) {
 			existsId = true;
 		}
 
@@ -230,7 +231,6 @@ public class KgbanDao {
 	 */
 	public boolean selectIsInvalid(int id) throws SQLException {
 
-		int invalidFlag = 0;
 		boolean isInvalid = false;
 
 		// コネクションクラスの宣言し、データベースとの接続を行う
@@ -251,10 +251,9 @@ public class KgbanDao {
 		// リザルトセットクラスの宣言をし、SQLを実行して取得結果をリザルトセットに格納
 		ResultSet rs = ps.executeQuery();
 
-		if (rs.next()) {
-			invalidFlag = rs.getInt("is_invalid");
-		}
-		if (invalidFlag == 0) {
+		// is_invalidが0ならtrueを返す
+		if (rs.next() && rs.getInt("is_invalid") == 0) {
+
 			isInvalid = true;
 		}
 
@@ -275,7 +274,7 @@ public class KgbanDao {
 	 * @param 画面から送られてきたID
 	 * @throws SQLException データべースアクセスエラー
 	 */
-	public void updateDelete(int id) throws SQLException {
+	public void updateIsInvalid(int id) throws SQLException {
 
 		// コネクションクラスの宣言し、データベースとの接続を行う
 		Connection con = DataSourceUtils.getConnection(dataSource);
