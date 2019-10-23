@@ -63,9 +63,9 @@ public class KgbanController {
 	/**
 	 * 投稿をDBに登録.
 	 * 
-	 * @param kgbanForm 投稿されたnameとmessage
-	 * @param result    エラーメッセージ
-	 * @param mav       モデルおよび遷移先画面を設定するクラス
+	 * @param kgbanForm     投稿されたnameとmessage
+	 * @param bindingResult エラーメッセージ
+	 * @param mav           モデルおよび遷移先画面を設定するクラス
 	 * @return 正常:掲示板画面再描画 異常:掲示板画面にエラーメッセージを表示
 	 * @throws SQLException データベースアクセスエラー
 	 */
@@ -106,7 +106,7 @@ public class KgbanController {
 	 * @param id                 削除したい投稿のID
 	 * @param mav                モデルおよび遷移先画面を設定するクラス
 	 * @param redirectAttributes リダイレクト先にメッセージを送る
-	 * @return 掲示板画面もしくは500エラー画面
+	 * @return 掲示板画面もしくはエラー画面
 	 */
 	@Transactional
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -116,7 +116,7 @@ public class KgbanController {
 		try {
 			// 送られてきたIDの投稿があるかチェック
 			if (!service.getCountId(id)) {
-				// 送られてきたIDの投稿が１件ではなかった場合500エラー画面に遷移
+				// 送られてきたIDの投稿が１件ではなかった場合400エラー画面に遷移
 				mav.setViewName("400");
 				return mav;
 			}
@@ -128,7 +128,6 @@ public class KgbanController {
 				return new ModelAndView("redirect:/");
 			}
 
-			// 削除処理を実行
 			// 送られてきたIDの投稿の無効フラグを0から1に変えるメソッド
 			service.deleteUserMessage(id);
 			mav.setViewName("MessageBoard");
