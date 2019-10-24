@@ -31,7 +31,7 @@ public class KgbanDao {
 	 * @return 投稿内容を格納したリスト
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public ArrayList<KgbanDto> selectUserMessages() throws SQLException {
+	public ArrayList<KgbanDto> selectMessagesPosted() throws SQLException {
 
 		ArrayList<KgbanDto> list = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
@@ -128,7 +128,7 @@ public class KgbanDao {
 	 * @param kgbanDto 投稿メッセージを格納したDto
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public void insertUserMessage(KgbanDto kgbanDto) throws SQLException {
+	public void insertMessagePost(KgbanDto kgbanDto) throws SQLException {
 
 		// コネクションクラスを宣言し、データベースとの接続を行う
 		Connection con = DataSourceUtils.getConnection(dataSource);
@@ -168,7 +168,7 @@ public class KgbanDao {
 	 * 画面から送られてきたIDと同じIDの投稿数を取得する.
 	 * 
 	 * @param id 画面から送られてきたID
-	 * @return 送られてきたIDと同じIDの投稿が１件かどうかの真偽
+	 * @return 送られてきたIDと同じIDの投稿の数
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	public int getCountId(int id) throws SQLException {
@@ -193,7 +193,6 @@ public class KgbanDao {
 		// SQLを実行して取得結果をリザルトセットに格納
 		ResultSet rs = ps.executeQuery();
 
-		// 取得結果が１件ならtrueを返す
 		if (rs.next()) {
 			countId = rs.getInt("COUNT(id)");
 		}
@@ -217,7 +216,7 @@ public class KgbanDao {
 	 * @return 無効フラグの値の真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public boolean selectIsInvalid(int id) throws SQLException {
+	public boolean isInvalid(int id) throws SQLException {
 
 		boolean isInvalid = false;
 

@@ -41,12 +41,12 @@ public class KgbanController {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView requestUserMessage(@ModelAttribute("form") KgbanForm kgbanForm, ModelAndView mav) {
+	public ModelAndView requestMessagePosted(@ModelAttribute("form") KgbanForm kgbanForm, ModelAndView mav) {
 
 		try {
 			// 表示画面と過去の投稿をセット
 			mav.setViewName("kgban");
-			ArrayList<KgbanDto> list = service.getUserMessages();
+			ArrayList<KgbanDto> list = service.getMessagesPosted();
 			mav.addObject("list", list);
 
 		} catch (SQLException e) {
@@ -71,7 +71,7 @@ public class KgbanController {
 	 */
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView saveUserMessage(@ModelAttribute("form") @Validated KgbanForm kgbanForm,
+	public ModelAndView saveMessagePost(@ModelAttribute("form") @Validated KgbanForm kgbanForm,
 			BindingResult bindingResult, ModelAndView mav) {
 
 		try {
@@ -79,14 +79,14 @@ public class KgbanController {
 			// エラーがあれば掲示板画面とエラーメッセージを返す
 			if (bindingResult.hasErrors()) {
 				mav.setViewName("kgban");
-				ArrayList<KgbanDto> list = service.getUserMessages();
+				ArrayList<KgbanDto> list = service.getMessagesPosted();
 				mav.addObject("list", list);
 
 				return mav;
 			}
 
 			// KgbanDtoに登録する内容を格納するメソッド呼び出し
-			service.setUserMessage(kgbanForm);
+			service.setMessagePost(kgbanForm);
 
 		} catch (SQLException e) {
 			// 例外があった場合は500エラー画面へ遷移
@@ -110,26 +110,26 @@ public class KgbanController {
 	 */
 	@Transactional
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public ModelAndView deleteUserMessage(@RequestParam("id") int id, ModelAndView mav,
+	public ModelAndView logicalDeleteMessage(@RequestParam("id") int id, ModelAndView mav,
 			RedirectAttributes redirectAttributes) {
 
 		try {
 			// 送られてきたIDの投稿があるかチェック
-			if (service.countUserMessage(id) != 1) {
+			if (service.countMessageOfId(id) != 1) {
 				// 送られてきたIDの投稿が１件ではなかった場合400エラー画面に遷移
 				mav.setViewName("400");
 				return mav;
 			}
 
 			// 送られてきたIDの投稿が既に削除されていないかチェック
-			if (!service.canDeleteUserMessage(id)) {
+			if (!service.canDeleteMessage(id)) {
 				// 投稿が既に削除されていた場合エラーメッセージとともに掲示板再描画
 				redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("error.app.delete"));
 				return new ModelAndView("redirect:/");
 			}
 
 			// 送られてきたIDの投稿を削除するメソッド
-			service.logicalDeleteUserMessage(id);
+			service.logicalDeleteMessage(id);
 			mav.setViewName("MessageBoard");
 			redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("ok.app.delete"));
 			return new ModelAndView("redirect:/");
