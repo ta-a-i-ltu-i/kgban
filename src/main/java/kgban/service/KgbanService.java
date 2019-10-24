@@ -28,10 +28,10 @@ public class KgbanService {
 	 * @return 過去の投稿を格納したリスト
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public ArrayList<KgbanDto> getMessagesPosted() throws SQLException {
+	public ArrayList<KgbanDto> getMessages() throws SQLException {
 
 		// 投稿内容を格納したリストを受け取り、呼び出し元へ返す
-		return dao.selectMessagesPosted();
+		return dao.selectMessages();
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class KgbanService {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	@Transactional
-	public void setMessagePost(KgbanForm kgbanForm) throws SQLException {
+	public void setPostMessage(KgbanForm kgbanForm) throws SQLException {
 
 		// 最大IDを取得する
 		int maxId = dao.getMaxId();
@@ -54,7 +54,7 @@ public class KgbanService {
 		dto.setMessage(kgbanForm.getMessage());
 		dto.setTime(sdf.format(new Timestamp(System.currentTimeMillis())));
 
-		dao.insertMessagePost(dto);
+		dao.insertPostMessage(dto);
 	}
 
 	/**

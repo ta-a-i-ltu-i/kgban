@@ -41,12 +41,12 @@ public class KgbanController {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView requestMessagePosted(@ModelAttribute("form") KgbanForm kgbanForm, ModelAndView mav) {
+	public ModelAndView requestMessages(@ModelAttribute("form") KgbanForm kgbanForm, ModelAndView mav) {
 
 		try {
 			// 表示画面と過去の投稿をセット
 			mav.setViewName("kgban");
-			ArrayList<KgbanDto> list = service.getMessagesPosted();
+			ArrayList<KgbanDto> list = service.getMessages();
 			mav.addObject("list", list);
 
 		} catch (SQLException e) {
@@ -71,7 +71,7 @@ public class KgbanController {
 	 */
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView saveMessagePost(@ModelAttribute("form") @Validated KgbanForm kgbanForm,
+	public ModelAndView savePostMessage(@ModelAttribute("form") @Validated KgbanForm kgbanForm,
 			BindingResult bindingResult, ModelAndView mav) {
 
 		try {
@@ -79,14 +79,14 @@ public class KgbanController {
 			// エラーがあれば掲示板画面とエラーメッセージを返す
 			if (bindingResult.hasErrors()) {
 				mav.setViewName("kgban");
-				ArrayList<KgbanDto> list = service.getMessagesPosted();
+				ArrayList<KgbanDto> list = service.getMessages();
 				mav.addObject("list", list);
 
 				return mav;
 			}
 
 			// KgbanDtoに登録する内容を格納するメソッド呼び出し
-			service.setMessagePost(kgbanForm);
+			service.setPostMessage(kgbanForm);
 
 		} catch (SQLException e) {
 			// 例外があった場合は500エラー画面へ遷移

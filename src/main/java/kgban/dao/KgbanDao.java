@@ -31,7 +31,7 @@ public class KgbanDao {
 	 * @return 投稿内容を格納したリスト
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public ArrayList<KgbanDto> selectMessagesPosted() throws SQLException {
+	public ArrayList<KgbanDto> selectMessages() throws SQLException {
 
 		ArrayList<KgbanDto> list = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
@@ -128,7 +128,7 @@ public class KgbanDao {
 	 * @param kgbanDto 投稿メッセージを格納したDto
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public void insertMessagePost(KgbanDto kgbanDto) throws SQLException {
+	public void insertPostMessage(KgbanDto kgbanDto) throws SQLException {
 
 		// コネクションクラスを宣言し、データベースとの接続を行う
 		Connection con = DataSourceUtils.getConnection(dataSource);
