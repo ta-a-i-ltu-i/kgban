@@ -41,7 +41,7 @@ public class KgbanService {
 	 * @throws SQLException データベースアクセスエラー
 	 */
 	@Transactional
-	public void setPostMessage(KgbanForm kgbanForm) throws SQLException {
+	public void postMessage(KgbanForm kgbanForm) throws SQLException {
 
 		// 最大IDを取得する
 		int maxId = dao.getMaxId();
@@ -54,7 +54,7 @@ public class KgbanService {
 		dto.setMessage(kgbanForm.getMessage());
 		dto.setTime(sdf.format(new Timestamp(System.currentTimeMillis())));
 
-		dao.insertPostMessage(dto);
+		dao.insertMessage(dto);
 	}
 
 	/**

@@ -85,8 +85,8 @@ public class KgbanController {
 				return mav;
 			}
 
-			// KgbanDtoに登録する内容を格納するメソッド呼び出し
-			service.setPostMessage(kgbanForm);
+			// 投稿をDBに登録するメソッド呼び出し
+			service.postMessage(kgbanForm);
 
 		} catch (SQLException e) {
 			// 例外があった場合は500エラー画面へ遷移

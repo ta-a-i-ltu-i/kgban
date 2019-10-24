@@ -128,7 +128,7 @@ public class KgbanDao {
 	 * @param kgbanDto 投稿メッセージを格納したDto
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public void insertPostMessage(KgbanDto kgbanDto) throws SQLException {
+	public void insertMessage(KgbanDto kgbanDto) throws SQLException {
 
 		// コネクションクラスを宣言し、データベースとの接続を行う
 		Connection con = DataSourceUtils.getConnection(dataSource);
