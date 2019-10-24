@@ -71,15 +71,15 @@ public class KgbanService {
 	}
 
 	/**
-	 * 画面から送られてきたIDの投稿が既に無効になっていないか確認する.
+	 * 画面から送られてきたIDの投稿が削除できるものか確認する.
 	 * 
 	 * @param id 画面から送られてきたID
 	 * @return 画面から送られてきたIDの投稿が既に削除されていないかの真偽
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public boolean checkInvalidMessage(int id) throws SQLException {
+	public boolean canDeleteUserMessage(int id) throws SQLException {
 
-		// 既に無効になっていないか確認するメソッド
+		// 削除できるものか確認するメソッド
 		return dao.selectIsInvalid(id);
 	}
 
@@ -89,10 +89,10 @@ public class KgbanService {
 	 * @param id 画面から送られてきたID
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public void deleteUserMessage(int id) throws SQLException {
+	public void logicalDeleteUserMessage(int id) throws SQLException {
 
 		// 送られてきたIDの投稿の無効フラグを0→1に変えるメソッド
-		dao.updateInvalidMessage(id);
+		dao.logicalDeleteMessage(id);
 	}
 
 }

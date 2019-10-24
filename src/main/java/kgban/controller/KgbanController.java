@@ -122,14 +122,14 @@ public class KgbanController {
 			}
 
 			// 送られてきたIDの投稿が既に削除されていないかチェック
-			if (!service.checkInvalidMessage(id)) {
+			if (!service.canDeleteUserMessage(id)) {
 				// 投稿が既に削除されていた場合エラーメッセージとともに掲示板再描画
 				redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("error.app.delete"));
 				return new ModelAndView("redirect:/");
 			}
 
 			// 送られてきたIDの投稿を削除するメソッド
-			service.deleteUserMessage(id);
+			service.logicalDeleteUserMessage(id);
 			mav.setViewName("MessageBoard");
 			redirectAttributes.addFlashAttribute("resultMessage", propertyConfig.get("ok.app.delete"));
 			return new ModelAndView("redirect:/");

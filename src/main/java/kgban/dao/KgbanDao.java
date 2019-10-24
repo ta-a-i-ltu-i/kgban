@@ -262,7 +262,7 @@ public class KgbanDao {
 	 * @param 画面から送られてきたID
 	 * @throws SQLException データべースアクセスエラー
 	 */
-	public void updateInvalidMessage(int id) throws SQLException {
+	public void logicalDeleteMessage(int id) throws SQLException {
 
 		// コネクションクラスの宣言し、データベースとの接続を行う
 		Connection con = DataSourceUtils.getConnection(dataSource);
