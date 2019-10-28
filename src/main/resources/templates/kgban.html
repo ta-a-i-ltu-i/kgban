@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<script type="text/javascript" src=kgban.js></script>
 <link rel="stylesheet" href="kgban.css">
 <title>掲示版</title>
 </head>
@@ -39,6 +40,13 @@
     <p th:text="${obj.message}" class="message">
       <output th:text="${obj.message}"></output>
     </p>
+    <div>
+      <form method="post" action="/delete">
+        <input type="hidden" name="id" th:value="${obj.id}">
+        <input id="delete" type="submit" value="削除" onclick="return deleteUserMessage()" />
+      </form>
+      <input type="hidden" id="deleteMessage" th:value="${resultMessage}">
+    </div>
   </div>
 </body>
 </html>

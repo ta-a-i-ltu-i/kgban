@@ -31,20 +31,13 @@ public class KgbanDao {
 	 * @return 投稿内容を格納したリスト
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public ArrayList<KgbanDto> selectUserMessages() throws SQLException {
-
-		// コネクションクラスの宣言
-		Connection con = null;
-		// ステートメントクラスの宣言
-		PreparedStatement ps = null;
-		// リザルトセットクラスの宣言
-		ResultSet rs = null;
+	public ArrayList<KgbanDto> selectMessages() throws SQLException {
 
 		ArrayList<KgbanDto> list = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
-		// データベースとの接続を行う
-		con = DataSourceUtils.getConnection(dataSource);
+		// コネクションクラスを宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT           ");
@@ -54,13 +47,16 @@ public class KgbanDao {
 		builder.append("  ,created_at    ");
 		builder.append("FROM             ");
 		builder.append("  message_board  ");
+		builder.append("WHERE            ");
+		builder.append("  is_invalid = 0 ");
 		builder.append("ORDER BY         ");
 		builder.append("  id DESC        ");
 
-		// ステートメントクラスにSQL文を格納
-		ps = con.prepareStatement(builder.toString());
-		// SQLを実行して取得結果をリザルトセットに格納
-		rs = ps.executeQuery();
+		// ステートメントクラスを宣言し、SQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
+
+		// リザルトセットクラス宣言をし、SQLを実行して取得結果をリザルトセットに格納
+		ResultSet rs = ps.executeQuery();
 
 		// リザルトセットから1レコードずつデータを取り出す
 		while (rs.next()) {
@@ -94,16 +90,10 @@ public class KgbanDao {
 	 */
 	public int getMaxId() throws SQLException {
 
-		// コネクションクラスの宣言
-		Connection con = null;
-		// ステートメントクラスの宣言
-		PreparedStatement ps = null;
-		// リザルトセットクラスの宣言
-		ResultSet rs = null;
-
 		int maxId = 0;
-		// データベースとの接続を行う
-		con = DataSourceUtils.getConnection(dataSource);
+
+		// コネクションクラスを宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
 
 		// 最大のIDを取得
 		StringBuilder builder = new StringBuilder();
@@ -112,10 +102,11 @@ public class KgbanDao {
 		builder.append("FROM                       ");
 		builder.append("  message_board            ");
 
-		// ステートメントクラスにSQL文を格納
-		ps = con.prepareStatement(builder.toString());
-		// SQLを実行して取得結果をリザルトセットに格納
-		rs = ps.executeQuery();
+		// ステートメントクラスを宣言し、SQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
+
+		// リザルトセットクラス宣言をし、SQLを実行して取得結果をリザルトセットに格納
+		ResultSet rs = ps.executeQuery();
 
 		if (rs.next()) {
 			maxId = rs.getInt("max_id");
@@ -137,15 +128,10 @@ public class KgbanDao {
 	 * @param kgbanDto 投稿メッセージを格納したDto
 	 * @throws SQLException データベースアクセスエラー
 	 */
-	public void insertUserMessage(KgbanDto kgbanDto) throws SQLException {
+	public void insertMessage(KgbanDto kgbanDto) throws SQLException {
 
-		// コネクションクラスの宣言
-		Connection con = null;
-		// ステートメントクラスの宣言
-		PreparedStatement ps = null;
-		//
-		// データベースとの接続を行う
-		con = DataSourceUtils.getConnection(dataSource);
+		// コネクションクラスを宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("INSERT INTO message_board ( ");
@@ -160,8 +146,8 @@ public class KgbanDao {
 		builder.append("  ,?                        ");
 		builder.append(" )                          ");
 
-		// ステートメントクラスにSQL文を格納
-		ps = con.prepareStatement(builder.toString());
+		// ステートメントクラスの宣言し、SQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
 
 		// パラメータをセット("?"に値を入れる)
 		ps.setInt(1, kgbanDto.getId());
@@ -169,6 +155,131 @@ public class KgbanDao {
 		ps.setString(3, kgbanDto.getMessage());
 		ps.setString(4, kgbanDto.getTime());
 
+		// SQLを実行
+		ps.executeUpdate();
+
+		if (ps != null) {
+			ps.close();
+		}
+
+	}
+
+	/**
+	 * 画面から送られてきたIDと同じIDの投稿数を取得する.
+	 * 
+	 * @param id 画面から送られてきたID
+	 * @return 送られてきたIDと同じIDの投稿の数
+	 * @throws SQLException データベースアクセスエラー
+	 */
+	public int getCountId(int id) throws SQLException {
+
+		int countId = 0;
+
+		// コネクションクラスの宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
+
+		// 画面から送られてきたIDと同じIDの投稿の数を取得
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT                     ");
+		builder.append("  COUNT( id )              ");
+		builder.append("FROM                       ");
+		builder.append("  message_board            ");
+		builder.append("WHERE                      ");
+		builder.append("  id = ?                   ");
+
+		// ステートメントクラスの宣言し、SQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
+		ps.setInt(1, id);
+		// SQLを実行して取得結果をリザルトセットに格納
+		ResultSet rs = ps.executeQuery();
+
+		if (rs.next()) {
+			countId = rs.getInt("COUNT(id)");
+		}
+
+		if (rs != null) {
+			rs.close();
+		}
+
+		if (ps != null) {
+			ps.close();
+		}
+		// 呼び出し元に取得結果を返却
+		return countId;
+
+	}
+
+	/**
+	 * 画面から送られてきたIDの投稿の無効フラグの値を取得.
+	 * 
+	 * @param id 画面から送られてきたID
+	 * @return 無効フラグの値の真偽
+	 * @throws SQLException データベースアクセスエラー
+	 */
+	public boolean isInvalid(int id) throws SQLException {
+
+		boolean isInvalid = false;
+
+		// コネクションクラスの宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
+
+		// 無効フラグの値を取得
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT                     ");
+		builder.append("  is_invalid               ");
+		builder.append("FROM                       ");
+		builder.append("  message_board            ");
+		builder.append("WHERE                      ");
+		builder.append("  id = ?                   ");
+
+		// ステートメントクラスの宣言をし、にSQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
+		ps.setInt(1, id);
+		// リザルトセットクラス宣言をし、SQLを実行して取得結果をリザルトセットに格納
+		ResultSet rs = ps.executeQuery();
+
+		// is_invalidが0ならtrueを返す
+		if (rs.next() && rs.getInt("is_invalid") == 0) {
+
+			isInvalid = true;
+		}
+
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		// 呼び出し元に取得結果を返却
+		return isInvalid;
+
+	}
+
+	/**
+	 * 無効フラグの値を0から1に変える.
+	 * 
+	 * @param 画面から送られてきたID
+	 * @throws SQLException データべースアクセスエラー
+	 */
+	public void logicalDeleteMessage(int id) throws SQLException {
+
+		// コネクションクラスの宣言し、データベースとの接続を行う
+		Connection con = DataSourceUtils.getConnection(dataSource);
+
+		// 削除する投稿の無効フラグの値を0から1に変える
+		StringBuilder builder = new StringBuilder();
+		builder.append("UPDATE                    ");
+		builder.append(" message_board            ");
+		builder.append("SET                       ");
+		builder.append(" is_invalid = 1           ");
+		builder.append("WHERE                     ");
+		builder.append(" is_invalid = 0           ");
+		builder.append("AND                       ");
+		builder.append(" id = ?                   ");
+
+		// ステートメントクラスの宣言し、にSQL文を格納
+		PreparedStatement ps = con.prepareStatement(builder.toString());
+		ps.setInt(1, id);
 		// SQLを実行
 		ps.executeUpdate();
 

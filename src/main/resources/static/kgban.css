@@ -1,7 +1,6 @@
 @charset "UTF-8";
 /*　掲示板*/
 
-
 /*　タイトル*/
 .title {
 	border: 1px solid #00001c;
@@ -54,4 +53,8 @@ p.output {
 	clear: both;
 	padding-left: 5%;
 	margin-bottom: 20px;
+}
+
+#delete {
+	margin-left: 95%;
 }
